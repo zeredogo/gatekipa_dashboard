@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export default function CardsPage() {
   const [cards, setCards] = useState<any[]>([]);
 
   useEffect(() => {
-    const q = query(collection(db, "cards"));
+    const q = query(collection(db, "cards"), orderBy("created_at", "desc"), limit(100));
     const unsub = onSnapshot(q, (snap) => {
       setCards(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });

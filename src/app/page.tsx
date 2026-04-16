@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, limit } from "firebase/firestore";
+import { collection, query, getCountFromServer, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Users, CreditCard, Activity, ArrowRightLeft } from "lucide-react";
 
@@ -14,17 +14,27 @@ export default function Home() {
   });
 
   useEffect(() => {
-    // Basic real-time aggregate listeners (For production, use aggregation queries, but snapshot lengths work for prototyping)
-    const unsubs = [
-      onSnapshot(collection(db, "users"), (snap) => setStats(s => ({ ...s, users: snap.size }))),
-      onSnapshot(collection(db, "cards"), (snap) => setStats(s => ({ ...s, cards: snap.size }))),
-      onSnapshot(collection(db, "transactions"), (snap) => setStats(s => ({ ...s, transactions: snap.size }))),
-      onSnapshot(collection(db, "card_funding_requests"), (snap) => {
-        const active = snap.docs.filter(d => d.data().status === "processing" || d.data().status === "unknown_error").length;
-        setStats(s => ({ ...s, activeRequests: active }));
-      }),
-    ];
-    return () => unsubs.forEach(u => u());
+    const fetchStats = async () => {
+      try {
+        const [usersSnap, cardsSnap, txSnap, activeProcessing, activeUnknown] = await Promise.all([
+          getCountFromServer(collection(db, "users")),
+          getCountFromServer(collection(db, "cards")),
+          getCountFromServer(collection(db, "transactions")),
+          getCountFromServer(query(collection(db, "card_funding_requests"), where("status", "==", "processing"))),
+          getCountFromServer(query(collection(db, "card_funding_requests"), where("status", "==", "unknown_error")))
+        ]);
+        
+        setStats({
+          users: usersSnap.data().count,
+          cards: cardsSnap.data().count,
+          transactions: txSnap.data().count,
+          activeRequests: activeProcessing.data().count + activeUnknown.data().count,
+        });
+      } catch (err) {
+        console.error("Failed to fetch aggregate metrics:", err);
+      }
+    };
+    fetchStats();
   }, []);
 
   return (

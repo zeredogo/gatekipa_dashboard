@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
-    const q = query(collection(db, "users"));
+    const q = query(collection(db, "users"), orderBy("created_at", "desc"), limit(100));
     const unsub = onSnapshot(q, (snap) => {
       setUsers(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });

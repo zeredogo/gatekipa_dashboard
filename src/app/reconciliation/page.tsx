@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, limit, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { AlertTriangle, Clock, ServerCrash } from "lucide-react";
 import toast from "react-hot-toast";
@@ -11,7 +11,7 @@ export default function ReconciliationPage() {
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
-    const q = query(collection(db, "card_funding_requests"));
+    const q = query(collection(db, "card_funding_requests"), orderBy("created_at", "desc"), limit(100));
     const unsub = onSnapshot(q, (snap) => {
       setFundingRequests(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
@@ -73,7 +73,25 @@ export default function ReconciliationPage() {
                 <td>
                   {(r.status === "processing" || r.status === "unknown_error") && (
                     <div style={{ display: "flex", gap: "8px" }}>
-                       <button className="gk-button" style={{ padding: "6px 12px", fontSize: "12px", background: "hsl(var(--success))", boxShadow: "none" }}>Mark Success</button>
+                       <button
+                         disabled={processingId !== null}
+                         onClick={async () => {
+                           if (!confirm(`Mark ${r.amount_ngn} NGN as successfully funded?`)) return;
+                           if (processingId) return;
+                           setProcessingId(r.id);
+                           try {
+                             await updateDoc(doc(db, "card_funding_requests", r.id), { status: "completed", updated_at: Date.now() });
+                             toast.success("Marked as success.");
+                           } catch (err: any) {
+                             toast.error(`Update failed: ${err.message}`);
+                           } finally {
+                             setProcessingId(null);
+                           }
+                         }}
+                         className={`gk-button ${processingId !== null ? "opacity-50 cursor-not-allowed" : ""}`}
+                         style={{ padding: "6px 12px", fontSize: "12px", background: "hsl(var(--success))", boxShadow: "none", opacity: processingId === r.id ? 0.5 : 1 }}>
+                         {processingId === r.id ? "Updating..." : "Mark Success"}
+                       </button>
                        <button 
                          disabled={processingId !== null}
                          onClick={async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, limit } from "firebase/firestore";
+import { collection, onSnapshot, query, limit, orderBy } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { db } from "@/lib/firebase";
 import { FileCheck, Activity } from "lucide-react";
@@ -13,7 +13,7 @@ export default function CompliancePage() {
 
   useEffect(() => {
     // Listens to global kyc_records to verify user documents
-    const q = query(collection(db, "kyc_records"), limit(50));
+    const q = query(collection(db, "kyc_records"), orderBy("submitted_at", "desc"), limit(50));
     const unsub = onSnapshot(q, (snap) => {
       setKycRecords(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });

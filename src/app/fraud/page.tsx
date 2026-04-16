@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, limit, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { AlertCircle } from "lucide-react";
 
@@ -10,12 +10,21 @@ export default function FraudAndRiskPage() {
 
   useEffect(() => {
     // Listens to global risk_flags for velocity checks and suspicious behavior
-    const q = query(collection(db, "risk_flags"), limit(50));
+    const q = query(collection(db, "risk_flags"), orderBy("created_at", "desc"), limit(50));
     const unsub = onSnapshot(q, (snap) => {
-      setFlags(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a: any, b: any) => (b.created_at || 0) - (a.created_at || 0)));
+      setFlags(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return unsub;
   }, []);
+
+  const handleInvestigate = async (id: string, status: string) => {
+    if (status === "resolved") return;
+    try {
+      await updateDoc(doc(db, "risk_flags", id), { status: "resolved", updated_at: Date.now() });
+    } catch (err) {
+      console.error("Failed to update status", err);
+    }
+  };
 
   return (
     <div>
@@ -59,8 +68,12 @@ export default function FraudAndRiskPage() {
                   )}
                 </td>
                 <td>
-                  <button className="gk-button" style={{ background: "transparent", border: "1px solid hsl(var(--border-color))", color: "hsl(var(--text-main))", padding: "6px 12px" }}>
-                    Investigate
+                  <button
+                    onClick={() => handleInvestigate(flag.id, flag.status)}
+                    disabled={flag.status === "resolved"}
+                    className="gk-button" 
+                    style={{ background: "transparent", border: "1px solid hsl(var(--border-color))", color: "hsl(var(--text-main))", padding: "6px 12px", opacity: flag.status === "resolved" ? 0.5 : 1 }}>
+                    {flag.status === "resolved" ? "Closed" : "Investigate"}
                   </button>
                 </td>
               </tr>
