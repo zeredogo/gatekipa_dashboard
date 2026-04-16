@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // Force refresh on token to get latest claims
           const idTokenResult = await currentUser.getIdTokenResult(true);
           setUser(currentUser);
-          setIsAdmin(!!idTokenResult.claims.adminRole);
+          setIsAdmin(!!(idTokenResult.claims.adminRole || idTokenResult.claims.role));
         } catch (error) {
           console.error("Error verifying admin claims:", error);
           setUser(null);
