@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Users, Wallet, CreditCard, Activity, ShieldAlert, PowerOff, ShieldCheck, ActivitySquare, TerminalSquare, Shield } from "lucide-react";
+import { Users, Wallet, CreditCard, Activity, ShieldAlert, PowerOff, ShieldCheck, ActivitySquare, TerminalSquare, Shield, LogOut } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         
         {/* User profile section at bottom */}
         <div className="p-4 border-t border-neutral-100 bg-white/50">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-50 border border-neutral-100 transition-colors hover:bg-neutral-100 cursor-pointer">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-50 border border-neutral-100 transition-colors hover:bg-neutral-100">
             <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-800 shadow-sm border border-emerald-200">
               SU
             </div>
@@ -78,6 +78,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <p className="text-sm font-bold text-neutral-900 truncate">Super Admin</p>
               <p className="text-xs text-neutral-500 truncate font-medium">System Authority</p>
             </div>
+            <button 
+              onClick={() => window.location.href = `https://logout:logout@${window.location.host}`}
+              className="p-2 text-rose-600 bg-rose-50/50 hover:bg-rose-100 rounded-lg transition-colors shadow-sm border border-rose-100"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
