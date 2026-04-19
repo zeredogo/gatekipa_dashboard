@@ -7,22 +7,27 @@ import CardActions from "./CardActions";
 export const dynamic = "force-dynamic";
 
 async function fetchCards() {
-  const snap = await adminDb.collection("cards").get();
-  
-  return Promise.all(snap.docs.map(async (doc) => {
-    const data = doc.data();
-    let liveState = null;
+  try {
+    const snap = await adminDb.collection("cards").get();
     
-    if (data.bridgecard_card_id) {
-      liveState = await syncBridgecardState(doc.id, data.bridgecard_card_id);
-    }
-    
-    return {
-      id: doc.id,
-      ...data,
-      liveBridgecardStatus: liveState?.is_active ? "active" : (liveState ? "frozen" : null)
-    };
-  }));
+    return Promise.all(snap.docs.map(async (doc) => {
+      const data = doc.data();
+      let liveState = null;
+      
+      if (data.bridgecard_card_id) {
+        liveState = await syncBridgecardState(doc.id, data.bridgecard_card_id);
+      }
+      
+      return {
+        id: doc.id,
+        ...data,
+        liveBridgecardStatus: liveState?.is_active ? "active" : (liveState ? "frozen" : null)
+      };
+    }));
+  } catch (err: any) {
+    console.warn("Failed to fetch cards:", err.message);
+    return [];
+  }
 }
 
 export default async function CardsManagementPage() {

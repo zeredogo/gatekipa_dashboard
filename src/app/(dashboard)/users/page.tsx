@@ -4,24 +4,29 @@ import { User, Shield, AlertTriangle, Fingerprint, MailCheck, ShieldCheck } from
 export const dynamic = "force-dynamic";
 
 async function fetchUsers() {
-  const usersSnap = await adminDb.collection("users").get();
-  return Promise.all(
-    usersSnap.docs.map(async (doc) => {
-      const data = doc.data();
-      let authUser = null;
-      try {
-        authUser = await adminAuth.getUser(doc.id);
-      } catch (e) {}
+  try {
+    const usersSnap = await adminDb.collection("users").get();
+    return Promise.all(
+      usersSnap.docs.map(async (doc) => {
+        const data = doc.data();
+        let authUser = null;
+        try {
+          authUser = await adminAuth.getUser(doc.id);
+        } catch (e) {}
 
-      return {
-        id: doc.id,
-        ...data,
-        emailVerified: authUser?.emailVerified || false,
-        disabled: authUser?.disabled || false,
-        customClaims: authUser?.customClaims || {},
-      };
-    })
-  );
+        return {
+          id: doc.id,
+          ...data,
+          emailVerified: authUser?.emailVerified || false,
+          disabled: authUser?.disabled || false,
+          customClaims: authUser?.customClaims || {},
+        };
+      })
+    );
+  } catch (err: any) {
+    console.warn("Failed to fetch users:", err.message);
+    return [];
+  }
 }
 
 export default async function UsersPage() {

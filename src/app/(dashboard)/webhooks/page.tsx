@@ -4,16 +4,21 @@ import { Activity, ShieldCheck, PlayCircle, ShieldAlert } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 async function fetchWebhookEvents() {
-  const eventsSnap = await adminDb.collection("webhook_events")
-    .orderBy("processed_at", "desc")
-    .limit(50)
-    .get();
-    
-  return eventsSnap.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-    processed_at: doc.data().processed_at?.toDate()?.toISOString() || new Date().toISOString(),
-  }));
+  try {
+    const eventsSnap = await adminDb.collection("webhook_events")
+      .orderBy("processed_at", "desc")
+      .limit(50)
+      .get();
+      
+    return eventsSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      processed_at: doc.data().processed_at?.toDate()?.toISOString() || new Date().toISOString(),
+    }));
+  } catch (err: any) {
+    console.warn("Failed to fetch webhooks:", err.message);
+    return [];
+  }
 }
 
 export default async function WebhooksPage() {

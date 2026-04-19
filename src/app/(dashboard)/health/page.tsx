@@ -4,15 +4,20 @@ import { ActivitySquare, AlertTriangle } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 async function fetchHealthLogs() {
-  const logsSnap = await adminDb.collection("health_logs")
-    .orderBy("timestamp", "desc")
-    .limit(100)
-    .get();
+  try {
+    const logsSnap = await adminDb.collection("health_logs")
+      .orderBy("timestamp", "desc")
+      .limit(100)
+      .get();
 
-  return logsSnap.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
+    return logsSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (err: any) {
+    console.warn("Failed to fetch health logs:", err.message);
+    return [];
+  }
 }
 
 export default async function HealthPage() {

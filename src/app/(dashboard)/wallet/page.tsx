@@ -4,42 +4,47 @@ import { AlertCircle, CheckCircle2, RefreshCw, ShieldAlert, BadgeInfo } from "lu
 export const dynamic = "force-dynamic";
 
 async function fetchWalletVerifications() {
-  const usersSnap = await adminDb.collection("users").get();
-  
-  const verifications = await Promise.all(
-    usersSnap.docs.map(async (userDoc) => {
-      const uid = userDoc.id;
-      const data = userDoc.data();
-      
-      // Get Balance
-      const balanceDoc = await adminDb.doc(`users/${uid}/wallet/balance`).get();
-      const statedBalance = balanceDoc.exists ? (balanceDoc.data()?.balance || 0) : 0;
-      
-      // Get Ledger
-      const txSnap = await adminDb.collection(`users/${uid}/wallet_transactions`).get();
-      let calculatedLedger = 0;
-      
-      txSnap.docs.forEach(txDoc => {
-        const tx = txDoc.data();
-        if (tx.type === "credit") {
-          calculatedLedger += (tx.amount || 0);
-        } else if (tx.type === "debit") {
-          calculatedLedger -= (tx.amount || 0);
-        }
-      });
-      
-      return {
-        uid,
-        email: data.email || 'Unknown',
-        statedBalance,
-        calculatedLedger,
-        txCount: txSnap.size,
-        isConsistent: statedBalance === calculatedLedger,
-      };
-    })
-  );
-  
-  return verifications;
+  try {
+    const usersSnap = await adminDb.collection("users").get();
+    
+    const verifications = await Promise.all(
+      usersSnap.docs.map(async (userDoc) => {
+        const uid = userDoc.id;
+        const data = userDoc.data();
+        
+        // Get Balance
+        const balanceDoc = await adminDb.doc(`users/${uid}/wallet/balance`).get();
+        const statedBalance = balanceDoc.exists ? (balanceDoc.data()?.balance || 0) : 0;
+        
+        // Get Ledger
+        const txSnap = await adminDb.collection(`users/${uid}/wallet_transactions`).get();
+        let calculatedLedger = 0;
+        
+        txSnap.docs.forEach(txDoc => {
+          const tx = txDoc.data();
+          if (tx.type === "credit") {
+            calculatedLedger += (tx.amount || 0);
+          } else if (tx.type === "debit") {
+            calculatedLedger -= (tx.amount || 0);
+          }
+        });
+        
+        return {
+          uid,
+          email: data.email || 'Unknown',
+          statedBalance,
+          calculatedLedger,
+          txCount: txSnap.size,
+          isConsistent: statedBalance === calculatedLedger,
+        };
+      })
+    );
+    
+    return verifications;
+  } catch (err: any) {
+    console.warn("Failed to fetch wallet logs:", err.message);
+    return [];
+  }
 }
 
 export default async function WalletAuditPage() {
