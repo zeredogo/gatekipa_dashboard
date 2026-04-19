@@ -15,10 +15,10 @@ const firebaseConfig = {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-if (typeof window !== "undefined") {
-  // Only inject AppCheck in the browser safely, bypassing server-side throws
+if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
+  // Only inject AppCheck in the browser if a valid key exists, preventing 400 Bad Request errors locally
   initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider("recaptcha-v3-site-key"), // Site key placeholder just like Flutter
+    provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY), 
     isTokenAutoRefreshEnabled: true
   });
 }
