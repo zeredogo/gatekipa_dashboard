@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 export const config = {
   // Apply middleware only to protected dashboard paths and server actions
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
 
-export default function proxy(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
   // If not set in Vercel, default to a temporary secure password so the user can easily get in.
   const adminPassword = process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure";
