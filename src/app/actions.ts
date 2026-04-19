@@ -2,7 +2,6 @@
 
 import { adminDb } from "@/lib/firebase/admin";
 import { revalidatePath } from "next/cache";
-import fetch from "node-fetch";
 
 // Requires admin SDK via firebase-admin which we've initialized remotely
 const BRIDGECARD_TOKEN = process.env.BRIDGECARD_ACCESS_TOKEN || "test_token"; // Safely bounded to server environment only
