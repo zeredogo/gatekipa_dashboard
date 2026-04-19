@@ -7,7 +7,7 @@ export const config = {
   ],
 };
 
-export function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
   const adminPassword = process.env.DASHBOARD_ADMIN_PASSWORD;
 
