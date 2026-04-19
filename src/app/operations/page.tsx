@@ -27,9 +27,9 @@ export default function WebhookOperationsPage() {
       const functions = getFunctions();
       const retryWebhook = httpsCallable(functions, 'retryWebhook');
       await retryWebhook({ eventId });
-      toast.success(`Webhook ${eventId} safely re-entered execution sequence.`);
+      toast.success(`Webhook Sequence ${eventId} restored to execution pool.`);
     } catch (err: any) {
-      toast.error(`Retry Failed: ${err.message}`);
+      toast.error(`Operation Exception: ${err.message}. Please verify the payload.`);
     } finally {
       setProcessingId(null);
     }

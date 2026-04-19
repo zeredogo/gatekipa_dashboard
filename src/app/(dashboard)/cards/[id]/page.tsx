@@ -37,9 +37,9 @@ export default function CardLedgerPage() {
       const freezeBridgecard = httpsCallable(functions, "freezeBridgecard");
       // The backend toggles based on current state or action param
       await freezeBridgecard({ cardId: card.id, action: isFreezing ? "freeze" : "unfreeze" });
-      toast.success(`Card successfully ${isFreezing ? "frozen" : "unfrozen"}.`);
+      toast.success(`Card network status set to ${isFreezing ? "FROZEN" : "ACTIVE"} globally.`);
     } catch (err: any) {
-      toast.error(`Operation Failed: ${err.message}`);
+      toast.error(`Network Exception: ${err.message}. Card state unchanged.`);
     } finally {
       setLoadingAction("");
     }
@@ -52,9 +52,9 @@ export default function CardLedgerPage() {
       const functions = getFunctions();
       const syncBridgecard = httpsCallable(functions, "syncBridgecard");
       await syncBridgecard({ card_id: cardId });
-      toast.success("Card synchronized with Bridgecard network successfully.");
+      toast.success("Card telemetry successfully synchronized with Bridgecard API.");
     } catch (err: any) {
-      toast.error(`Sync Failed: ${err.message}`);
+      toast.error(`Synchronization Error: ${err.message}. Please try again later.`);
     } finally {
       setIsSyncing(false);
     }

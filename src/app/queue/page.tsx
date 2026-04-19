@@ -27,9 +27,9 @@ export default function ProviderQueuePage() {
       const functions = getFunctions();
       const adminRetryTask = httpsCallable(functions, 'adminRetryTask');
       await adminRetryTask({ taskId });
-      toast.success(`Task ${taskId} successfully re-queued for execution.`);
+      toast.success(`Execution Task ${taskId} has been successfully re-queued.`);
     } catch (err: any) {
-      toast.error(`Admin Retry Failed: ${err.message}`);
+      toast.error(`Queue Operation Failed: ${err.message}. Please check system logs.`);
     } finally {
       setProcessingId(null);
     }

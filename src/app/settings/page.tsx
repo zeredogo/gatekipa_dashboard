@@ -26,9 +26,9 @@ export default function AdminSettingsPage() {
       const functions = getFunctions();
       const setAdminRole = httpsCallable(functions, 'setAdminRole');
       const res: any = await setAdminRole({ targetUid, targetRole });
-      toast.success(res.data?.message || "Role updated successfully.");
+      toast.success(res.data?.message || "Administrator privileges updated globally.");
     } catch (err: any) {
-      toast.error(`Role assignment failed: ${err.message}`);
+      toast.error(`Authorization Error: ${err.message}. Operation denied.`);
     } finally {
       setProcessingId(null);
     }

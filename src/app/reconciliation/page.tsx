@@ -81,9 +81,9 @@ export default function ReconciliationPage() {
                            setProcessingId(r.id);
                            try {
                              await updateDoc(doc(db, "card_funding_requests", r.id), { status: "completed", updated_at: Date.now() });
-                             toast.success("Marked as success.");
+                             toast.success("Ledger entry marked as globally successful.");
                            } catch (err: any) {
-                             toast.error(`Update failed: ${err.message}`);
+                             toast.error(`Reconciliation Error: ${err.message}. State rollback initiated.`);
                            } finally {
                              setProcessingId(null);
                            }
@@ -102,9 +102,9 @@ export default function ReconciliationPage() {
                              const { getFunctions, httpsCallable } = await import("firebase/functions");
                              const refund = httpsCallable(getFunctions(), "processReconciliationRefund");
                              await refund({ requestId: r.id });
-                             toast.success("Refund successful.");
+                             toast.success("Transaction refund processed successfully.");
                            } catch (err: any) {
-                             toast.error(`Refund failed: ${err.message}`);
+                             toast.error(`Refund Exception: ${err.message}. Funds retained.`);
                            } finally {
                              setProcessingId(null);
                            }

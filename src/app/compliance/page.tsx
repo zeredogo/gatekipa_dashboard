@@ -28,9 +28,9 @@ export default function CompliancePage() {
       const functions = getFunctions();
       const moderateKYC = httpsCallable(functions, 'moderateKYC');
       await moderateKYC({ recordId, decision, reason: "Manual Review" });
-      toast.success(`User KYC successfully ${decision}.`);
+      toast.success(`KYC status successfully updated. Notification queued.`);
     } catch (err: any) {
-      toast.error(`Moderation failed: ${err.message}`);
+      toast.error(`Compliance Operation Failed: ${err.message}.`);
     } finally {
       setProcessingId(null);
     }
