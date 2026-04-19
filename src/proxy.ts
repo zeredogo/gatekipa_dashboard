@@ -9,15 +9,8 @@ export const config = {
 
 export default function proxy(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
-  const adminPassword = process.env.DASHBOARD_ADMIN_PASSWORD;
-
-  // If no password is set in the environment, we lock everything down completely 
-  // to avoid exposing the system entirely by default.
-  if (!adminPassword) {
-    return new NextResponse("Authentication Misconfigured: DASHBOARD_ADMIN_PASSWORD is not set.", {
-      status: 500,
-    });
-  }
+  // If not set in Vercel, default to a temporary secure password so the user can easily get in.
+  const adminPassword = process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure";
 
   if (basicAuth) {
     const authValue = basicAuth.split(" ")[1];
