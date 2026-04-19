@@ -80,16 +80,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <button 
               onClick={async () => {
-                // Send a request with bad credentials to force the browser to clear its stored Basic Auth credentials
-                try {
-                  await fetch(window.location.href, {
-                    headers: {
-                      Authorization: "Basic " + btoa("logout:logout")
-                    }
-                  });
-                } catch (_) {}
-                // Reload - browser will now show the login prompt with cleared credentials
-                window.location.reload();
+                await fetch("/api/auth", { method: "DELETE" });
+                window.location.href = "/login";
               }}
               className="p-2 text-rose-600 bg-rose-50/50 hover:bg-rose-100 rounded-lg transition-colors shadow-sm border border-rose-100"
               title="Logout"
