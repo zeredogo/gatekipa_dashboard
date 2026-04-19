@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, Wallet, CreditCard, Activity, ShieldAlert, PowerOff, ShieldCheck, ActivitySquare, TerminalSquare, ShieldClass } from "lucide-react";
+import { Users, Wallet, CreditCard, Activity, ShieldAlert, PowerOff, ShieldCheck, ActivitySquare, TerminalSquare, Shield } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -29,7 +29,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="h-20 flex items-center px-8 border-b border-neutral-100 relative z-10">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200 shadow-sm">
-              <ShieldClass className="w-5 h-5" />
+              <Shield className="w-5 h-5" />
             </div>
             <h1 className="font-bold text-lg text-neutral-900 tracking-tight">
               Gatekeeper
