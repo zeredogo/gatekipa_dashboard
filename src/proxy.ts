@@ -28,11 +28,11 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  // Request credentials (CHANGING THE REALM INVALIDATES CORRUPT BROWSER BASIC AUTH CACHES)
+  // Request credentials — realm change busts stale browser Basic Auth credential caches
   return new NextResponse("Admin Authentication Required", {
     status: 401,
     headers: {
-      "WWW-Authenticate": 'Basic realm="Gatekeeper Secure System v2", charset="UTF-8"',
+      "WWW-Authenticate": 'Basic realm="Gatekeeper Admin Portal v3", charset="UTF-8"',
     },
   });
 }
