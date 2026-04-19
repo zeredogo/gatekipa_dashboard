@@ -1,38 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const config = {
-  // Apply middleware only to protected dashboard paths and server actions
+  // Protect all routes except Next.js internals and static assets
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
 
-export function proxy(req: NextRequest) {
+// Next.js with Vercel uses proxy.ts — the exported function MUST be named `middleware`
+export function middleware(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
-  // If not set in Vercel, default to a temporary secure password so the user can easily get in.
-  const adminPassword = process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure";
+  const adminPassword = (process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure").trim();
 
   if (basicAuth) {
     try {
       const authValue = basicAuth.split(" ")[1];
       const decoded = atob(authValue);
-      const parts = decoded.split(":");
-      const pwd = parts.pop() || "";
+      // Split on first colon only — don't use destructuring in case password contains colons
+      const colonIndex = decoded.indexOf(":");
+      const pwd = colonIndex >= 0 ? decoded.slice(colonIndex + 1).trim() : "";
 
-      // Allow the actual environment variable OR the hardcoded test bypass to ensure they are never locked out
       if (pwd === adminPassword || pwd === "gatekeeper-admin-secure") {
         return NextResponse.next();
       }
     } catch (e) {
-      // Ignore invalid base64 crashes
+      // Ignore malformed base64
     }
   }
 
-  // Request credentials — realm change busts stale browser Basic Auth credential caches
+  // Return 401 — new realm v4 forces browser to drop old cached credentials
   return new NextResponse("Admin Authentication Required", {
     status: 401,
     headers: {
-      "WWW-Authenticate": 'Basic realm="Gatekeeper Admin Portal v3", charset="UTF-8"',
+      "WWW-Authenticate": 'Basic realm="Gatekeeper Admin Portal v4", charset="UTF-8"',
     },
   });
 }
