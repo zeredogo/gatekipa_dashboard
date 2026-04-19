@@ -7,8 +7,8 @@ export const config = {
   ],
 };
 
-// Next.js with Vercel uses proxy.ts — the exported function MUST be named `middleware`
-export function middleware(req: NextRequest) {
+// Next.js 16 / Turbopack: proxy.ts must export a function named `proxy`
+export function proxy(req: NextRequest) {
   const basicAuth = req.headers.get("authorization");
   const adminPassword = (process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure").trim();
 
