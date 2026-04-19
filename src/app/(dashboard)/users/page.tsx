@@ -1,5 +1,5 @@
 import { adminDb, adminAuth } from "@/lib/firebase/admin";
-import { User, Shield, AlertTriangle, AccountTree, Fingerprint, MailCheck, ShieldCheck } from "lucide-react";
+import { User, Shield, AlertTriangle, Fingerprint, MailCheck, ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
