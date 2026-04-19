@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, Suspense } from "react";
+import { useState, FormEvent, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ShieldCheck, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 
@@ -13,6 +13,15 @@ function LoginForm() {
   const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // If browser has stale credentials in the URL (e.g. logout:logout@host), strip them
+  useEffect(() => {
+    if (window.location.href.includes("@")) {
+      window.location.replace(
+        window.location.pathname + window.location.search
+      );
+    }
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
