@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { adminAuth } from "@/lib/firebase/admin";
 
 export async function POST(req: NextRequest) {
   const { password } = await req.json();
   const adminPassword = (process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure").trim();
 
   if (password === adminPassword) {
-    const res = NextResponse.json({ success: true });
+    let customToken = null;
+    try {
+      customToken = await adminAuth.createCustomToken("gatekeeper-super-admin", { admin: true });
+    } catch (e: any) {
+      console.warn("Could not generate custom token:", e.message);
+    }
+
+    const res = NextResponse.json({ success: true, customToken });
     res.cookies.set("gk_admin_session", adminPassword, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

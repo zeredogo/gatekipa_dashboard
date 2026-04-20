@@ -3,6 +3,8 @@
 import { useState, FormEvent, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ShieldCheck, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { auth } from "@/lib/firebase/client";
+import { signInWithCustomToken } from "firebase/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +38,19 @@ function LoginForm() {
       });
 
       if (res.ok) {
+        const data = await res.json();
+        
+        // Log into Firebase Client SDK to enable Cloud Functions
+        if (data.customToken) {
+          try {
+            await signInWithCustomToken(auth, data.customToken);
+          } catch (firebaseErr: any) {
+            console.error("Firebase Client Auth failed:", firebaseErr);
+            // We can still proceed to routing since server cookies are set, 
+            // but interactive functions may fail.
+          }
+        }
+
         const from = searchParams.get("from") || "/users";
         router.push(from);
         router.refresh();
