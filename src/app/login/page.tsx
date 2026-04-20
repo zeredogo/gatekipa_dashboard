@@ -52,8 +52,7 @@ function LoginForm() {
         }
 
         const from = searchParams.get("from") || "/users";
-        router.push(from);
-        router.refresh();
+        window.location.href = from;
       } else {
         setError("Access denied. Invalid administrator credentials.");
         setPassword("");

@@ -7,13 +7,15 @@ export async function POST(req: NextRequest) {
 
   if (password === adminPassword) {
     let customToken = null;
+    let tokenError = null;
     try {
       customToken = await adminAuth.createCustomToken("gatekeeper-super-admin", { admin: true });
     } catch (e: any) {
       console.warn("Could not generate custom token:", e.message);
+      tokenError = e.message;
     }
 
-    const res = NextResponse.json({ success: true, customToken });
+    const res = NextResponse.json({ success: true, customToken, tokenError });
     res.cookies.set("gk_admin_session", adminPassword, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
