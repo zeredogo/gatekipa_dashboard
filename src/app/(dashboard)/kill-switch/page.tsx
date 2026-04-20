@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { PowerOff, AlertTriangle, ShieldAlert } from "lucide-react";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "@/lib/firebase/client";
 
 export default function KillSwitchPage() {
   const [loading, setLoading] = useState(false);
@@ -17,25 +15,30 @@ export default function KillSwitchPage() {
     setResult(null);
 
     try {
-      const lockFn = httpsCallable(functions, "adminGlobalKillSwitch");
-      const res = await lockFn();
-      const payload: any = res.data;
+      const res = await fetch("/api/kill-switch", { method: "POST" });
+      const payload = await res.json();
+
+      if (!res.ok) {
+        setResult({
+          success: false,
+          message: payload.error || "Server error occurred.",
+          totalProcessed: "—", frozen: "—", failed: "—",
+        });
+        return;
+      }
+
       setResult({
         success: true,
         message: "All active cards were successfully frozen globally.",
         totalProcessed: payload.processed,
         frozen: payload.frozen,
-        failed: payload.failed
+        failed: payload.failed,
       });
     } catch (err: any) {
-      // If there's a partial failure, standard HttpsError is thrown with FAILED STATE details
-      const msg = err.message || "Unknown error occurred";
       setResult({
         success: false,
-        message: msg,
-        totalProcessed: "—", // In partial failure we may not get full stats depending on error structure
-        frozen: "—",
-        failed: "—"
+        message: err.message || "Unknown error occurred",
+        totalProcessed: "—", frozen: "—", failed: "—",
       });
     } finally {
       setLoading(false);
