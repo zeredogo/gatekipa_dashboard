@@ -16,27 +16,39 @@ function normalizePrivateKey(raw: string): string {
 
 if (!admin.apps.length) {
   try {
-    const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
-    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim() || "";
-    const rawKey = process.env.FIREBASE_PRIVATE_KEY || "";
-    const privateKey = normalizePrivateKey(rawKey);
-
-    // Diagnostics — visible in Vercel Function logs
-    console.log("[Firebase Admin] project_id:", projectId || "MISSING");
-    console.log("[Firebase Admin] client_email:", clientEmail || "MISSING");
-    console.log("[Firebase Admin] key_starts_with:", privateKey.slice(0, 27) || "MISSING");
-
-    if (projectId && privateKey.startsWith("-----BEGIN PRIVATE KEY-----")) {
+    const rawServiceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+    
+    if (rawServiceAccount) {
+      // 1. Try single JSON string format (Bulletproof Vercel Method)
+      const serviceAccount = JSON.parse(normalizePrivateKey(rawServiceAccount));
       admin.initializeApp({
-        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+        credential: admin.credential.cert(serviceAccount)
       });
-      console.log("[Firebase Admin] Initialized successfully.");
+      console.log("[Firebase Admin] Initialized successfully via FIREBASE_SERVICE_ACCOUNT_KEY.");
     } else {
-      console.warn("[Firebase Admin] Missing or malformed credentials. Falling back to dummy project.");
-      admin.initializeApp({ projectId: 'demo-gatekipa-build' });
+      // 2. Fall back to legacy 3-variable format
+      const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
+      const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim() || "";
+      const rawKey = process.env.FIREBASE_PRIVATE_KEY || "";
+      const privateKey = normalizePrivateKey(rawKey);
+
+      // Diagnostics — visible in Vercel Function logs
+      console.log("[Firebase Admin] project_id:", projectId || "MISSING");
+      console.log("[Firebase Admin] client_email:", clientEmail || "MISSING");
+      console.log("[Firebase Admin] key_starts_with:", privateKey.slice(0, 27) || "MISSING");
+
+      if (projectId && privateKey.startsWith("-----BEGIN PRIVATE KEY-----")) {
+        admin.initializeApp({
+          credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+        });
+        console.log("[Firebase Admin] Initialized successfully.");
+      } else {
+        console.warn("[Firebase Admin] Missing or malformed credentials. Falling back to dummy project.");
+        admin.initializeApp({ projectId: 'demo-gatekipa-build' });
+      }
     }
   } catch (error: any) {
-    console.error('[Firebase Admin] Initialization error:', error.stack);
+    console.error('[Firebase Admin] Initialization error:', error.message);
   }
 }
 
