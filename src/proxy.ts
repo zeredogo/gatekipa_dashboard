@@ -15,7 +15,12 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Redirect to login page
+  // If this is an API route, return 401 JSON instead of an HTML redirect
+  if (req.nextUrl.pathname.startsWith("/api/")) {
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Redirect to login page for UI routes
   const loginUrl = new URL("/login", req.url);
   loginUrl.searchParams.set("from", req.nextUrl.pathname);
   return NextResponse.redirect(loginUrl);
