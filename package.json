@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.5",
+    "dotenv": "^17.4.2",
     "firebase": "^12.12.0",
     "firebase-admin": "^13.8.0",
     "lucide-react": "^1.8.0",

@@ -10,6 +10,19 @@ async function verifySession(): Promise<boolean> {
   return session === adminPassword;
 }
 
+export async function GET(req: NextRequest) {
+  const isAuthed = await verifySession();
+  if (!isAuthed) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const docSnap = await adminDb.doc('system_state/global').get();
+    const mode = docSnap.exists ? docSnap.data()?.mode || 'NORMAL' : 'NORMAL';
+    return NextResponse.json({ success: true, mode });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   // 1. Auth gate — must have valid session cookie
   const isAuthed = await verifySession();
@@ -18,44 +31,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // 2. Fetch all active cards using Admin SDK (bypasses Firestore rules)
-    const cardsSnap = await adminDb
-      .collection("cards")
-      .where("status", "==", "active")
-      .get();
+    const body = await req.json().catch(() => ({}));
+    const targetMode = body.mode === 'NORMAL' ? 'NORMAL' : 'LOCKDOWN';
 
-    if (cardsSnap.empty) {
-      return NextResponse.json({ success: true, processed: 0, frozen: 0, failed: 0 });
-    }
+    await adminDb.doc('system_state/global').set({ mode: targetMode }, { merge: true });
 
-    // 3. Batch-update all active cards to 'blocked'
-    const chunks: FirebaseFirestore.DocumentSnapshot[][] = [];
-    const docs = cardsSnap.docs;
-    for (let i = 0; i < docs.length; i += 450) {
-      chunks.push(docs.slice(i, i + 450));
-    }
-
-    let totalProcessed = 0;
-    for (const chunk of chunks) {
-      const batch = adminDb.batch();
-      for (const doc of chunk) {
-        batch.update(doc.ref, {
-          status: "blocked",
-          ...(doc.data().bridgecard_card_id && { bridgecard_status: "frozen" }),
-          admin_locked_at: Date.now(),
-        });
-        totalProcessed++;
-      }
-      await batch.commit();
-    }
-
-    // Note: Bridgecard API freeze is handled asynchronously by existing Cloud Function webhooks.
-    // This endpoint handles the Firestore state change immediately for instant UI feedback.
     return NextResponse.json({
       success: true,
-      processed: cardsSnap.size,
-      frozen: totalProcessed,
-      failed: 0,
+      message: targetMode === 'LOCKDOWN' 
+        ? "Global Network Kill Switch Engaged. All webhooks are now blocking transactions."
+        : "Network Restored to Normal Operation.",
+      mode: targetMode
     });
   } catch (err: any) {
     console.error("[Kill Switch API] Error:", err.message);
