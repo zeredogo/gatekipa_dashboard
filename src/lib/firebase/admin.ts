@@ -9,6 +9,8 @@ import * as admin from 'firebase-admin';
  */
 function normalizePrivateKey(raw: string): string {
   return raw
+    .replace(/^"/, '')        // remove leading quote if pasted with quotes
+    .replace(/"$/, '')        // remove trailing quote if pasted with quotes
     .replace(/\\\\n/g, '\n')  // double-escaped → real newline
     .replace(/\\n/g, '\n')    // single-escaped → real newline
     .trim();
