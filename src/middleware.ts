@@ -6,7 +6,7 @@ export const config = {
   ],
 };
 
-export function proxy(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const session = req.cookies.get("gk_admin_session");
   const adminPassword = (process.env.DASHBOARD_ADMIN_PASSWORD || "gatekeeper-admin-secure").trim();
 

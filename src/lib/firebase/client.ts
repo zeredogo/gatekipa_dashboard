@@ -4,14 +4,14 @@ import { getFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
-// Admin dashboard Firebase project (gatekeeper-15331) — kept separate from the mobile app (gatekipa-bbd1c)
+// Admin dashboard Firebase project is now synced with the core mobile app (gatekipa-bbd1c)
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBfMF-H0uC3AtaeMVpjEzHNIoVeKZ7keiE",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "gatekeeper-15331.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "gatekeeper-15331",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "gatekeeper-15331.firebasestorage.app",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "731025691522",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:731025691522:web:082105420d459cb30d759b"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyA_Fc8xFCutxNN0elWvGSqjozMuzKzNJBo",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "gatekipa-bbd1c.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "gatekipa-bbd1c",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "gatekipa-bbd1c.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "274080186354",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:274080186354:web:gatekeeperwebadmin"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

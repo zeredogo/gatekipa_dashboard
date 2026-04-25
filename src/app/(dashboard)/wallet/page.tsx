@@ -114,8 +114,8 @@ export default async function WalletAuditPage() {
                     <BadgeInfo className="w-3 h-3" /> {v.uid}
                   </div>
                 </td>
-                <td className="px-6 py-5 text-right font-bold text-[15px]">₦{v.statedBalance.toLocaleString()}</td>
-                <td className="px-6 py-5 text-right font-bold text-[15px]">₦{v.calculatedLedger.toLocaleString()}</td>
+                <td className="px-6 py-5 text-right font-bold text-[15px]">₦{(v.statedBalance / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td className="px-6 py-5 text-right font-bold text-[15px]">₦{(v.calculatedLedger / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 <td className="px-6 py-5 text-center text-neutral-500 font-medium">
                   <span className="bg-neutral-100 text-neutral-600 px-3 py-1 rounded-full text-xs">{v.txCount} logs</span>
                 </td>

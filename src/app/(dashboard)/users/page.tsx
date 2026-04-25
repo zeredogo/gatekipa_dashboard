@@ -5,24 +5,27 @@ export const dynamic = "force-dynamic";
 
 async function fetchUsers() {
   try {
-    const usersSnap = await adminDb.collection("users").get();
-    return Promise.all(
-      usersSnap.docs.map(async (doc) => {
-        const data = doc.data();
-        let authUser = null;
-        try {
-          authUser = await adminAuth.getUser(doc.id);
-        } catch (e) {}
+    const [usersSnap, authUsersList] = await Promise.all([
+      adminDb.collection("users").get(),
+      adminAuth.listUsers(1000)
+    ]);
+    
+    // Create a fast lookup map for auth users
+    const authMap = new Map();
+    authUsersList.users.forEach(u => authMap.set(u.uid, u));
 
-        return {
-          id: doc.id,
-          ...data,
-          emailVerified: authUser?.emailVerified || false,
-          disabled: authUser?.disabled || false,
-          customClaims: authUser?.customClaims || {},
-        };
-      })
-    );
+    return usersSnap.docs.map((doc) => {
+      const data = doc.data();
+      const authUser = authMap.get(doc.id);
+
+      return {
+        id: doc.id,
+        ...data,
+        emailVerified: authUser?.emailVerified || false,
+        disabled: authUser?.disabled || false,
+        customClaims: authUser?.customClaims || {},
+      };
+    });
   } catch (err: any) {
     console.warn("Failed to fetch users:", err.message);
     return [];

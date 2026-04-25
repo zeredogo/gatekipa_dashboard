@@ -80,7 +80,7 @@ export default function UserTimelinePage() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "24px" }}>
         <div className="glass-panel" style={{ padding: "24px" }}>
           <h3 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "8px", color: "hsl(var(--text-muted))" }}>Available Balance</h3>
-          <h1 style={{ fontSize: "32px", margin: 0 }}>₦{wallet?.balance?.toLocaleString() || "0.00"}</h1>
+          <h1 style={{ fontSize: "32px", margin: 0 }}>₦{wallet?.balance ? (wallet.balance / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</h1>
         </div>
         <div className="glass-panel" style={{ padding: "24px" }}>
            <h3 style={{ fontSize: "14px", fontWeight: 600, marginBottom: "16px", color: "hsl(var(--text-muted))" }}>Identity Metadata</h3>
