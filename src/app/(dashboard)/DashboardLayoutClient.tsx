@@ -18,7 +18,8 @@ import {
   Cpu,
   Webhook,
   LogOut,
-  Settings
+  Settings,
+  MessageSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { removeSession } from "@/app/actions/auth";
@@ -44,6 +45,7 @@ export default function DashboardLayoutClient({
     { name: "Cards", href: "/cards", icon: CreditCard },
     { name: "Transactions", href: "/transactions", icon: Wallet },
     { name: "Reconciliation", href: "/reconciliation", icon: Search },
+    { name: "Broadcast", href: "/broadcast", icon: MessageSquare },
     { name: "Compliance", href: "/compliance", icon: ShieldCheck },
     { name: "Fraud", href: "/fraud", icon: AlertTriangle },
     { name: "Global Freeze", href: "/freeze", icon: Power },

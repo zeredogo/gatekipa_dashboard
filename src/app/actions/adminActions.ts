@@ -129,3 +129,65 @@ export async function sendInAppNotification(userId: string, title: string, messa
     return { success: false, error: e.message };
   }
 }
+
+// --- BROADCAST NOTIFICATION ACTION --- //
+export async function sendBroadcastNotification(userIds: string[], title: string, message: string, channels: { push: boolean, inApp: boolean, whatsapp: boolean }) {
+  try {
+    const admin = require("firebase-admin");
+    const db = admin.firestore();
+    
+    // Process in batches
+    let successCount = 0;
+    
+    for (const userId of userIds) {
+      const userDoc = await db.collection("users").doc(userId).get();
+      if (!userDoc.exists) continue;
+      
+      const userData = userDoc.data();
+      
+      // 1. In-App Notification
+      if (channels.inApp) {
+        await db.collection("users").doc(userId).collection("notifications").add({
+          user_id: userId,
+          type: "system",
+          title: title,
+          body: message,
+          isRead: false,
+          timestamp: new Date(),
+        });
+      }
+      
+      // 2. Push Notification
+      if (channels.push && userData?.fcm_token) {
+        try {
+          await admin.messaging().send({
+            token: userData.fcm_token,
+            notification: { title, body: message },
+            data: { type: "broadcast" },
+          });
+        } catch (e) {
+          console.error(`FCM failed for ${userId}:`, e);
+        }
+      }
+      
+      // 3. WhatsApp Integration via Tabi.Africa
+      if (channels.whatsapp && userData?.phone_number) {
+        // Mocking the tabi.africa integration here.
+        // In production, you would use fetch() to send the payload to api.tabi.africa
+        console.log(`[Tabi.Africa API] Sending WhatsApp to ${userData.phone_number}: ${message}`);
+        // await fetch("https://api.tabi.africa/v1/messages/whatsapp", {
+        //   method: "POST",
+        //   headers: { "Authorization": `Bearer ${process.env.TABI_AFRICA_API_KEY}`, "Content-Type": "application/json" },
+        //   body: JSON.stringify({ to: userData.phone_number, text: message })
+        // });
+      }
+      
+      successCount++;
+    }
+    
+    return { success: true, count: successCount };
+  } catch (e: any) {
+    console.error("Broadcast failed:", e);
+    return { success: false, error: e.message };
+  }
+}
