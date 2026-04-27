@@ -28,7 +28,7 @@ export default function BroadcastClient({ initialUsers }: { initialUsers: any[] 
       (u.displayName || "").toLowerCase().includes(searchTerm.toLowerCase());
     
     // Country
-    const uCountry = u.country || "NG"; // Defaulting mostly to NG for Gatekipa
+    const uCountry = u.country || "Nigeria"; // Defaulting mostly to Nigeria for Gatekipa
     const matchesCountry = countryFilter === "ALL" || uCountry === countryFilter;
     
     // KYC
@@ -77,6 +77,18 @@ export default function BroadcastClient({ initialUsers }: { initialUsers: any[] 
     });
   };
 
+  const ALL_COUNTRIES = [
+    'Nigeria', 'Ghana', 'Kenya', 'South Africa', 'Uganda', 'Rwanda',
+    'Tanzania', 'Egypt', 'Ethiopia', 'Cameroon', 'Senegal', 'Ivory Coast',
+    'United States', 'United Kingdom', 'Canada', 'Germany', 'France',
+    'India', 'Brazil', 'Australia', 'Japan', 'China', 'UAE',
+    'Saudi Arabia', 'Netherlands', 'Italy', 'Spain', 'Mexico',
+    'Argentina', 'Colombia', 'Turkey', 'Indonesia', 'Philippines',
+    'Malaysia', 'Singapore', 'South Korea', 'Poland', 'Sweden',
+    'Norway', 'Denmark', 'Switzerland', 'Austria', 'Belgium',
+    'Portugal', 'Ireland', 'New Zealand', 'Other'
+  ];
+
   return (
     <div className="space-y-8">
       <div>
@@ -113,9 +125,9 @@ export default function BroadcastClient({ initialUsers }: { initialUsers: any[] 
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-forest-500/50"
               >
                 <option value="ALL" className="bg-black text-white">All Countries</option>
-                <option value="NG" className="bg-black text-white">Nigeria</option>
-                <option value="GH" className="bg-black text-white">Ghana</option>
-                <option value="US" className="bg-black text-white">United States</option>
+                {ALL_COUNTRIES.map(c => (
+                  <option key={c} value={c} className="bg-black text-white">{c}</option>
+                ))}
               </select>
             </div>
 
@@ -140,8 +152,10 @@ export default function BroadcastClient({ initialUsers }: { initialUsers: any[] 
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-forest-500/50"
               >
                 <option value="ALL" className="bg-black text-white">All Plans</option>
-                <option value="instant" className="bg-black text-white">Instant (Free)</option>
-                <option value="premium" className="bg-black text-white">Premium</option>
+                <option value="free" className="bg-black text-white">Instant (Free)</option>
+                <option value="activation" className="bg-black text-white">Activation Plan</option>
+                <option value="premium" className="bg-black text-white">Sentinel Prime</option>
+                <option value="business" className="bg-black text-white">Business Plan</option>
               </select>
             </div>
           </div>
