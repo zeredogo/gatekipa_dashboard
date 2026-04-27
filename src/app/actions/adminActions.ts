@@ -75,3 +75,18 @@ export async function updateFeeConfiguration(fee: number) {
     return { success: false, error: e.message };
   }
 }
+
+// --- KYC ACTIONS --- //
+export async function approveKyc(userId: string) {
+  try {
+    await db.collection("users").doc(userId).update({
+      kycStatus: "verified"
+    });
+    revalidatePath("/compliance");
+    revalidatePath("/users");
+    return { success: true };
+  } catch (e: any) {
+    console.error("Failed to approve KYC:", e);
+    return { success: false, error: e.message };
+  }
+}

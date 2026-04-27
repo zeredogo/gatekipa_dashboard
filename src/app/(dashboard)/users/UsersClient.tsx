@@ -8,6 +8,7 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState(initialUsers);
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleToggleBlock = (userId: string, currentStatus: string) => {
@@ -102,7 +103,12 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
                       <span className="text-sm text-gray-400">{user.createdAt}</span>
                     </td>
                     <td className="p-4 flex gap-2">
-                      <button className="text-forest-400 hover:text-forest-300 text-sm font-medium">Details</button>
+                      <button 
+                        onClick={() => setSelectedUser(user)}
+                        className="text-forest-400 hover:text-forest-300 text-sm font-medium"
+                      >
+                        Details
+                      </button>
                       <button 
                         onClick={() => handleToggleBlock(user.id, user.status || "active")}
                         disabled={pendingUserId === user.id}
@@ -122,6 +128,45 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
           </table>
         </div>
       </div>
+      {selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="glass-panel p-8 rounded-3xl max-w-md w-full border border-white/10 shadow-2xl relative">
+            <button 
+              onClick={() => setSelectedUser(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+            >
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold text-white mb-6">User Details</h2>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-400">User ID</p>
+                <p className="text-white font-mono text-sm">{selectedUser.id}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Name</p>
+                <p className="text-white font-medium">{selectedUser.displayName}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Email</p>
+                <p className="text-white">{selectedUser.email}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Joined</p>
+                <p className="text-white">{selectedUser.createdAt}</p>
+              </div>
+              <div className="pt-4 flex justify-end">
+                <button 
+                  onClick={() => setSelectedUser(null)}
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

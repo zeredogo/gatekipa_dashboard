@@ -1,12 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import { ShieldCheck, Search } from "lucide-react";
+import React, { useState, useTransition } from "react";
+import { ShieldCheck, Search, CheckCircle, Loader2 } from "lucide-react";
+import { approveKyc } from "@/app/actions/adminActions";
 
 export default function ComplianceClient({ initialReviews }: { initialReviews: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [reviews, setReviews] = useState(initialReviews);
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  const filteredReviews = initialReviews.filter(user => 
+  const handleApprove = (userId: string) => {
+    setPendingUserId(userId);
+    startTransition(async () => {
+      const result = await approveKyc(userId);
+      if (result.success) {
+        setReviews(reviews.filter(u => u.id !== userId));
+      } else {
+        alert("Failed to approve KYC");
+      }
+      setPendingUserId(null);
+    });
+  };
+
+  const filteredReviews = reviews.filter(user =>  
     (user.displayName || "").toLowerCase().includes(searchTerm.toLowerCase()) || 
     (user.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.id.includes(searchTerm)
@@ -73,7 +90,14 @@ export default function ComplianceClient({ initialReviews }: { initialReviews: a
                       </span>
                     </td>
                     <td className="p-4">
-                      <button className="text-forest-400 hover:text-forest-300 text-sm font-medium">Review</button>
+                      <button 
+                        onClick={() => handleApprove(user.id)}
+                        disabled={pendingUserId === user.id}
+                        className="text-emerald-400 hover:text-emerald-300 text-sm font-medium flex items-center gap-1 disabled:opacity-50"
+                      >
+                        {pendingUserId === user.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                        Approve KYC
+                      </button>
                     </td>
                   </tr>
                 ))
