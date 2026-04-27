@@ -6,7 +6,8 @@ export const dynamic = "force-dynamic";
 
 export default async function ReconciliationPage() {
   // Aggregate live internal wallets
-  const walletsSnapshot = await db.collection("wallets").get();
+  // Note: Wallets in the Flutter app are stored as users/{uid}/wallet/balance
+  const walletsSnapshot = await db.collectionGroup("wallet").get();
   let totalWalletBalance = 0;
   walletsSnapshot.forEach(doc => {
     totalWalletBalance += (doc.data().balance || 0);
