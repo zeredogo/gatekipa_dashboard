@@ -22,6 +22,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Toaster } from "react-hot-toast";
 import { removeSession } from "@/app/actions/auth";
 
 export default function DashboardLayoutClient({
@@ -56,6 +57,29 @@ export default function DashboardLayoutClient({
 
   return (
     <div className="min-h-screen flex bg-background overflow-hidden selection:bg-primary/30">
+      <Toaster 
+        position="top-right" 
+        toastOptions={{
+          style: {
+            background: '#1A202C',
+            color: '#fff',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '12px',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10B981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#F43F5E',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
       {/* Sidebar */}
       <motion.aside 
         initial={{ width: 280 }}

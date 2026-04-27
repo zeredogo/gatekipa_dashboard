@@ -3,6 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { Sliders, Settings, Loader2, Save } from "lucide-react";
 import { updateFeeConfiguration } from "@/app/actions/adminActions";
+import { toast } from "react-hot-toast";
 
 export default function RulesClient({ systemState, initialFees }: { systemState: any, initialFees: any }) {
   const [fee, setFee] = useState(initialFees?.cardCreationFee || 2.00);
@@ -12,7 +13,9 @@ export default function RulesClient({ systemState, initialFees }: { systemState:
     startTransition(async () => {
       const result = await updateFeeConfiguration(Number(fee));
       if (!result.success) {
-        alert("Failed to update fee: " + result.error);
+        toast.error("Failed to update fee: " + result.error);
+      } else {
+        toast.success("Fee updated successfully!");
       }
     });
   };

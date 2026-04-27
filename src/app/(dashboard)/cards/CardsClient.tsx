@@ -3,6 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { CreditCard, Search, Filter, Snowflake, CheckCircle, Loader2 } from "lucide-react";
 import { toggleCardFreeze } from "@/app/actions/adminActions";
+import { toast } from "react-hot-toast";
 
 export default function CardsClient({ initialCards }: { initialCards: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,8 +17,9 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
       const result = await toggleCardFreeze(cardId, currentStatus);
       if (result.success) {
         setCards(cards.map(c => c.id === cardId ? { ...c, status: result.status } : c));
+        toast.success(`Card successfully ${result.status === "active" ? "unfrozen" : "frozen"}`);
       } else {
-        alert("Failed to update card status");
+        toast.error("Failed to update card status");
       }
       setPendingCardId(null);
     });

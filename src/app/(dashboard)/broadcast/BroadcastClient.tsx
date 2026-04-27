@@ -3,6 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { MessageSquare, Users, Loader2, Send } from "lucide-react";
 import { sendBroadcastNotification } from "@/app/actions/adminActions";
+import { toast } from "react-hot-toast";
 
 export default function BroadcastClient({ initialUsers }: { initialUsers: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,15 +44,15 @@ export default function BroadcastClient({ initialUsers }: { initialUsers: any[] 
 
   const handleSend = () => {
     if (!title || !message) {
-      alert("Title and message are required.");
+      toast.error("Title and message are required.");
       return;
     }
     if (filteredUsers.length === 0) {
-      alert("No users match the current filters.");
+      toast.error("No users match the current filters.");
       return;
     }
     if (!channelPush && !channelInApp && !channelWhatsapp) {
-      alert("Select at least one delivery channel.");
+      toast.error("Select at least one delivery channel.");
       return;
     }
 
@@ -67,11 +68,11 @@ export default function BroadcastClient({ initialUsers }: { initialUsers: any[] 
       });
 
       if (result.success) {
-        alert(`Successfully dispatched to ${result.count} users!`);
+        toast.success(`Successfully dispatched to ${result.count} users!`);
         setTitle("");
         setMessage("");
       } else {
-        alert("Broadcast failed: " + result.error);
+        toast.error("Broadcast failed: " + result.error);
       }
     });
   };

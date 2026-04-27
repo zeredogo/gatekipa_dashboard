@@ -3,6 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { ShieldCheck, Search, CheckCircle, Loader2 } from "lucide-react";
 import { approveKyc } from "@/app/actions/adminActions";
+import { toast } from "react-hot-toast";
 
 export default function ComplianceClient({ initialReviews }: { initialReviews: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,8 +17,9 @@ export default function ComplianceClient({ initialReviews }: { initialReviews: a
       const result = await approveKyc(userId);
       if (result.success) {
         setReviews(reviews.filter(u => u.id !== userId));
+        toast.success("KYC approved successfully!");
       } else {
-        alert("Failed to approve KYC");
+        toast.error("Failed to approve KYC");
       }
       setPendingUserId(null);
     });

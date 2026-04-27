@@ -3,6 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { Users, Search, Filter, Ban, CheckCircle, Loader2 } from "lucide-react";
 import { toggleUserBlockStatus, sendInAppNotification } from "@/app/actions/adminActions";
+import { toast } from "react-hot-toast";
 
 export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,15 +17,15 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
 
 
   const handleSendNotification = async () => {
-    if (!notificationTitle || !notificationBody) return alert("Title and Message are required");
+    if (!notificationTitle || !notificationBody) return toast.error("Title and Message are required");
     setIsSendingNotification(true);
     const result = await sendInAppNotification(selectedUser.id, notificationTitle, notificationBody);
     if (result.success) {
-      alert("Notification sent successfully!");
+      toast.success("Notification sent successfully!");
       setNotificationTitle("");
       setNotificationBody("");
     } else {
-      alert("Failed to send notification: " + result.error);
+      toast.error("Failed to send notification: " + result.error);
     }
     setIsSendingNotification(false);
   };
@@ -35,8 +36,9 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
       const result = await toggleUserBlockStatus(userId, currentStatus);
       if (result.success) {
         setUsers(users.map(u => u.id === userId ? { ...u, status: result.status } : u));
+        toast.success(`User successfully ${result.status}`);
       } else {
-        alert("Failed to update user block status");
+        toast.error("Failed to update user block status");
       }
       setPendingUserId(null);
     });
