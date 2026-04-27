@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import { Users, Search, Filter, Ban, CheckCircle, Loader2 } from "lucide-react";
-import { toggleUserBlockStatus } from "@/app/actions/adminActions";
+import { toggleUserBlockStatus, sendInAppNotification } from "@/app/actions/adminActions";
 
 export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,6 +10,27 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationBody, setNotificationBody] = useState("");
+  const [isSendingNotification, setIsSendingNotification] = useState(false);
+
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationBody, setNotificationBody] = useState("");
+  const [isSendingNotification, setIsSendingNotification] = useState(false);
+
+  const handleSendNotification = async () => {
+    if (!notificationTitle || !notificationBody) return alert("Title and Message are required");
+    setIsSendingNotification(true);
+    const result = await sendInAppNotification(selectedUser.id, notificationTitle, notificationBody);
+    if (result.success) {
+      alert("Notification sent successfully!");
+      setNotificationTitle("");
+      setNotificationBody("");
+    } else {
+      alert("Failed to send notification: " + result.error);
+    }
+    setIsSendingNotification(false);
+  };
 
   const handleToggleBlock = (userId: string, currentStatus: string) => {
     setPendingUserId(userId);
@@ -155,10 +176,38 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
                 <p className="text-sm text-gray-400">Joined</p>
                 <p className="text-white">{selectedUser.createdAt}</p>
               </div>
+              <div className="pt-4 border-t border-white/10 mt-4">
+                <h3 className="text-lg font-bold text-white mb-3">Send Notification</h3>
+                <div className="space-y-3">
+                  <input 
+                    type="text" 
+                    placeholder="Notification Title" 
+                    value={notificationTitle}
+                    onChange={(e) => setNotificationTitle(e.target.value)}
+                    className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-forest-500/50"
+                  />
+                  <textarea 
+                    placeholder="Message Body" 
+                    value={notificationBody}
+                    onChange={(e) => setNotificationBody(e.target.value)}
+                    rows={3}
+                    className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-forest-500/50"
+                  />
+                  <button 
+                    onClick={handleSendNotification}
+                    disabled={isSendingNotification}
+                    className="w-full bg-forest-500 hover:bg-forest-600 text-white rounded-xl py-2 text-sm font-medium transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
+                  >
+                    {isSendingNotification && <Loader2 className="w-4 h-4 animate-spin" />}
+                    Send Push & In-App Alert
+                  </button>
+                </div>
+              </div>
+
               <div className="pt-4 flex justify-end">
                 <button 
                   onClick={() => setSelectedUser(null)}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-colors text-sm font-medium"
                 >
                   Close
                 </button>

@@ -90,3 +90,42 @@ export async function approveKyc(userId: string) {
     return { success: false, error: e.message };
   }
 }
+
+// --- NOTIFICATION ACTIONS --- //
+export async function sendInAppNotification(userId: string, title: string, message: string) {
+  try {
+    const userDoc = await db.collection("users").doc(userId).get();
+    if (!userDoc.exists) return { success: false, error: "User not found" };
+
+    // 1. Write to in-app notification center
+    await db.collection("users").doc(userId).collection("notifications").add({
+      user_id: userId,
+      type: "system",
+      title: title,
+      body: message,
+      isRead: false,
+      timestamp: new Date(),
+    });
+
+    // 2. Dispatch FCM Push Notification if token exists
+    const fcmToken = userDoc.data()?.fcm_token;
+    if (fcmToken) {
+      const admin = require("firebase-admin");
+      await admin.messaging().send({
+        token: fcmToken,
+        notification: {
+          title: title,
+          body: message,
+        },
+        data: {
+          type: "system",
+        },
+      });
+    }
+
+    return { success: true };
+  } catch (e: any) {
+    console.error("Failed to send notification:", e);
+    return { success: false, error: e.message };
+  }
+}
