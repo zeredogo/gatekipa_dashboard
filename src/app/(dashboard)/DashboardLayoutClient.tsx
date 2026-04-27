@@ -18,11 +18,9 @@ import {
   Cpu,
   Webhook,
   LogOut,
-  Settings,
-  MessageSquare
+  Settings
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Toaster } from "react-hot-toast";
 import { removeSession } from "@/app/actions/auth";
 
 export default function DashboardLayoutClient({
@@ -46,7 +44,6 @@ export default function DashboardLayoutClient({
     { name: "Cards", href: "/cards", icon: CreditCard },
     { name: "Transactions", href: "/transactions", icon: Wallet },
     { name: "Reconciliation", href: "/reconciliation", icon: Search },
-    { name: "Broadcast", href: "/broadcast", icon: MessageSquare },
     { name: "Compliance", href: "/compliance", icon: ShieldCheck },
     { name: "Fraud", href: "/fraud", icon: AlertTriangle },
     { name: "Global Freeze", href: "/freeze", icon: Power },
@@ -57,29 +54,6 @@ export default function DashboardLayoutClient({
 
   return (
     <div className="min-h-screen flex bg-background overflow-hidden selection:bg-primary/30">
-      <Toaster 
-        position="top-right" 
-        toastOptions={{
-          style: {
-            background: '#1A202C',
-            color: '#fff',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '12px',
-          },
-          success: {
-            iconTheme: {
-              primary: '#10B981',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#F43F5E',
-              secondary: '#fff',
-            },
-          },
-        }}
-      />
       {/* Sidebar */}
       <motion.aside 
         initial={{ width: 280 }}
@@ -120,7 +94,7 @@ export default function DashboardLayoutClient({
                   ${isActive ? activeColor : `text-gray-400 ${hoverColor}`}
                 `}
               >
-                <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? (isFreeze ? 'text-rose-400' : 'text-forest-400') : `text-gray-400 ${isFreeze ? 'group-hover:text-rose-400' : 'group-hover:text-white'} transition-colors`}`} />
+                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? (isFreeze ? 'text-rose-400' : 'text-forest-400') : `text-gray-400 ${isFreeze ? 'group-hover:text-rose-400' : 'group-hover:text-white'} transition-colors`}`} />
                 {sidebarOpen && <span className="font-medium whitespace-nowrap text-sm">{item.name}</span>}
               </Link>
             );
@@ -129,7 +103,7 @@ export default function DashboardLayoutClient({
 
         <div className="p-4 border-t border-white/5 shrink-0">
           <button onClick={handleLogout} className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:bg-rose-500/10 hover:text-rose-400 transition-all duration-200 group">
-            <LogOut className="w-5 h-5 flex-shrink-0 group-hover:text-rose-400 transition-colors" />
+            <LogOut className="w-5 h-5 shrink-0 group-hover:text-rose-400 transition-colors" />
             {sidebarOpen && <span className="font-medium text-sm">Logout</span>}
           </button>
         </div>
@@ -167,7 +141,7 @@ export default function DashboardLayoutClient({
                 <p className="text-sm font-semibold text-white">{adminEmail}</p>
                 <p className="text-xs text-gray-400">Super Administrator</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-forest-500 to-purple-500 border-2 border-white/10 flex items-center justify-center font-bold text-white uppercase">{adminEmail.charAt(0)}</div>
+              <div className="w-10 h-10 rounded-full bg-linear-to-tr from-forest-500 to-purple-500 border-2 border-white/10 flex items-center justify-center font-bold text-white uppercase">{adminEmail.charAt(0)}</div>
             </div>
           </div>
         </header>

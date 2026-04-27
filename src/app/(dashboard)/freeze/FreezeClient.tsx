@@ -3,7 +3,6 @@
 import React, { useState, useTransition } from "react";
 import { ShieldAlert, AlertTriangle, Lock, Unlock, Server, Loader2 } from "lucide-react";
 import { toggleGlobalFreeze } from "@/app/actions/adminActions";
-import { toast } from "react-hot-toast";
 
 export default function FreezeClient({ initialIsFrozen }: { initialIsFrozen: boolean }) {
   const [isFrozen, setIsFrozen] = useState(initialIsFrozen);
@@ -14,9 +13,8 @@ export default function FreezeClient({ initialIsFrozen }: { initialIsFrozen: boo
       const result = await toggleGlobalFreeze(isFrozen);
       if (result.success) {
         setIsFrozen(result.mode === "LOCKDOWN");
-        toast.success(`Global freeze ${result.mode === "LOCKDOWN" ? "activated" : "deactivated"}`);
       } else {
-        toast.error("Failed to toggle freeze state.");
+        alert("Failed to toggle freeze state.");
       }
     });
   };

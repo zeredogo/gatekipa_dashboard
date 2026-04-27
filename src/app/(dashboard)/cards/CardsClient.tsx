@@ -3,7 +3,6 @@
 import React, { useState, useTransition } from "react";
 import { CreditCard, Search, Filter, Snowflake, CheckCircle, Loader2 } from "lucide-react";
 import { toggleCardFreeze } from "@/app/actions/adminActions";
-import { toast } from "react-hot-toast";
 
 export default function CardsClient({ initialCards }: { initialCards: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,9 +16,8 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
       const result = await toggleCardFreeze(cardId, currentStatus);
       if (result.success) {
         setCards(cards.map(c => c.id === cardId ? { ...c, status: result.status } : c));
-        toast.success(`Card successfully ${result.status === "active" ? "unfrozen" : "frozen"}`);
       } else {
-        toast.error("Failed to update card status");
+        alert("Failed to update card status");
       }
       setPendingCardId(null);
     });
@@ -39,6 +37,10 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
           <p className="text-gray-400 mt-1">Monitor issued Bridgecard virtual cards, status, and associated risks.</p>
         </div>
         <div className="flex gap-3">
+          <button className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl transition-colors border border-white/10">
+            <Filter className="w-4 h-4" />
+            Filter
+          </button>
         </div>
       </div>
 
@@ -77,7 +79,7 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
                   <tr key={card.id} className="hover:bg-white/5 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-12 h-8 rounded flex items-center justify-center border border-white/10 ${card.status === 'active' ? 'bg-gradient-to-tr from-forest-600 to-forest-400' : 'bg-gradient-to-tr from-gray-600 to-gray-400 opacity-70'}`}>
+                        <div className={`w-12 h-8 rounded flex items-center justify-center border border-white/10 ${card.status === 'active' ? 'bg-linear-to-tr from-forest-600 to-forest-400' : 'bg-linear-to-tr from-gray-600 to-gray-400 opacity-70'}`}>
                           <span className="text-[10px] font-bold text-white tracking-widest">****</span>
                         </div>
                         <div>
@@ -87,7 +89,7 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
                       </div>
                     </td>
                     <td className="p-4">
-                      <p className="text-sm text-gray-300 font-mono text-xs truncate max-w-[100px]">{card.ownerId}</p>
+                      <p className="text-gray-300 font-mono text-xs truncate max-w-[100px]">{card.ownerId}</p>
                     </td>
                     <td className="p-4">
                       {card.status === "active" ? (

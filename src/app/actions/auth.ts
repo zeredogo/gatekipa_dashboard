@@ -5,24 +5,6 @@ import { auth } from "@/lib/firebaseAdmin";
 
 export async function createSession(idToken: string) {
   try {
-    if (!process.env.FIREBASE_PRIVATE_KEY) {
-      return { success: false, error: "DEBUG: Server is missing FIREBASE_PRIVATE_KEY environment variable." };
-    }
-    
-    // Diagnostic check for the DECODER routines error
-    let pk = process.env.FIREBASE_PRIVATE_KEY;
-    const hasQuotes = pk.startsWith('"') || pk.endsWith('"');
-    const hasEscapedNewlines = pk.includes('\\n');
-    const hasLiteralNewlines = pk.includes('\n');
-    const startsWithHeader = pk.includes('BEGIN PRIVATE KEY');
-    
-    if (idToken === "debug_key_format") {
-      return { 
-        success: false, 
-        error: `Key Diagnostics -> Length: ${pk.length}, Quotes: ${hasQuotes}, \\n: ${hasEscapedNewlines}, Literal Newline: ${hasLiteralNewlines}, Header: ${startsWithHeader}`
-      };
-    }
-
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
     const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
     
@@ -36,9 +18,9 @@ export async function createSession(idToken: string) {
     });
     
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Session creation failed", error);
-    return { success: false, error: error?.message || "Unauthorized" };
+    return { success: false, error: "Unauthorized" };
   }
 }
 

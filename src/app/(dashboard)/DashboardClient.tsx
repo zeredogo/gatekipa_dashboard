@@ -95,7 +95,7 @@ export default function DashboardClient({ totalUsers, activeCards, isHealthy, to
             {recentAlerts.map((alert) => (
               <div key={alert.id} className="p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
                 <div className="flex gap-4">
-                  <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full ${
+                  <div className={`mt-1 shrink-0 w-2 h-2 rounded-full ${
                     alert.type === 'fraud' ? 'bg-rose-500' : 
                     alert.type === 'system' ? 'bg-amber-500' : 'bg-forest-500'
                   }`}></div>

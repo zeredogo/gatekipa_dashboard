@@ -2,6 +2,7 @@
 
 import { db, auth } from "@/lib/firebaseAdmin";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 // --- SYSTEM STATE ACTIONS --- //
 
@@ -94,7 +95,8 @@ export async function approveKyc(userId: string) {
 // --- NOTIFICATION ACTIONS --- //
 export async function sendInAppNotification(userId: string, title: string, message: string) {
   try {
-    const sessionCookie = cookies().get('session')?.value;
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get('session')?.value;
     if (!sessionCookie) return { success: false, error: "Unauthorized" };
 
     const admin = require("firebase-admin");

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/dist/server/web/spec-extension/response';
 import type { NextRequest } from 'next/dist/server/web/spec-extension/request';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const session = request.cookies.get('session');
 
   // If user is trying to access the login page while already authenticated, redirect to dashboard
