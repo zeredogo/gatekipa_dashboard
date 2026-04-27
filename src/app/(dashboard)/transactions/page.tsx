@@ -15,11 +15,14 @@ export default async function TransactionsPage() {
     const data = doc.data();
     const amount = data.amount || 0;
     const type = data.type || "unknown";
+    const status = data.status?.toLowerCase() || "pending";
     
-    // Correct mapping for real transaction types
-    if (type === "wallet_funding") vaultDeposits += amount;
-    if (type === "wallet_to_card") cardFunding += amount;
-    if (type === "card_charge") revenueFees += amount; // Assuming Bridgecard spend
+    // Only aggregate successful transactions
+    if (status === "success") {
+      if (type === "wallet_funding") vaultDeposits += amount;
+      if (type === "wallet_to_card") cardFunding += amount;
+      if (type === "card_charge") revenueFees += amount; // Assuming Bridgecard spend
+    }
 
     const isDebit = type === "wallet_to_card" || type === "card_charge";
 
