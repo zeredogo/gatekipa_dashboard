@@ -36,10 +36,7 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
           <p className="text-gray-400 mt-1">Manage platform users, verify identities, and review account statuses.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl transition-colors border border-white/10">
-            <Filter className="w-4 h-4" />
-            Filter
-          </button>
+
           <button className="flex items-center gap-2 bg-forest-500 hover:bg-forest-600 text-white px-4 py-2 rounded-xl transition-colors font-medium">
             <Users className="w-4 h-4" />
             Export Users

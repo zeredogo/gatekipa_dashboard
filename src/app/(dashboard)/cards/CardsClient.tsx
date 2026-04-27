@@ -37,10 +37,6 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
           <p className="text-gray-400 mt-1">Monitor issued Bridgecard virtual cards, status, and associated risks.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl transition-colors border border-white/10">
-            <Filter className="w-4 h-4" />
-            Filter
-          </button>
         </div>
       </div>
 
