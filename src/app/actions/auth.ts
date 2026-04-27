@@ -5,6 +5,10 @@ import { auth } from "@/lib/firebaseAdmin";
 
 export async function createSession(idToken: string) {
   try {
+    if (!process.env.FIREBASE_PRIVATE_KEY) {
+      return { success: false, error: "DEBUG: Server is missing FIREBASE_PRIVATE_KEY environment variable. Firebase Admin failed to initialize." };
+    }
+    
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
     const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
     
@@ -18,9 +22,9 @@ export async function createSession(idToken: string) {
     });
     
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Session creation failed", error);
-    return { success: false, error: "Unauthorized" };
+    return { success: false, error: error?.message || "Unauthorized" };
   }
 }
 
