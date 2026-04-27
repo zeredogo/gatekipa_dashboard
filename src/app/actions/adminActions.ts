@@ -172,14 +172,27 @@ export async function sendBroadcastNotification(userIds: string[], title: string
       
       // 3. WhatsApp Integration via Tabi.Africa
       if (channels.whatsapp && userData?.phone_number) {
-        // Mocking the tabi.africa integration here.
-        // In production, you would use fetch() to send the payload to api.tabi.africa
-        console.log(`[Tabi.Africa API] Sending WhatsApp to ${userData.phone_number}: ${message}`);
-        // await fetch("https://api.tabi.africa/v1/messages/whatsapp", {
-        //   method: "POST",
-        //   headers: { "Authorization": `Bearer ${process.env.TABI_AFRICA_API_KEY}`, "Content-Type": "application/json" },
-        //   body: JSON.stringify({ to: userData.phone_number, text: message })
-        // });
+        if (process.env.TABI_API_KEY) {
+          try {
+            // Tabi.Africa standard message payload
+            await fetch("https://api.tabi.africa/v1/messages/send", {
+              method: "POST",
+              headers: { 
+                "Authorization": `Bearer ${process.env.TABI_API_KEY}`, 
+                "Content-Type": "application/json" 
+              },
+              body: JSON.stringify({ 
+                recipient: userData.phone_number, 
+                type: "text",
+                message: { text: message } 
+              })
+            });
+          } catch (e) {
+            console.error(`[Tabi.Africa] Failed to send WhatsApp to ${userData.phone_number}`, e);
+          }
+        } else {
+          console.warn("[Tabi.Africa] Skipping WhatsApp: TABI_API_KEY is not set in environment variables.");
+        }
       }
       
       successCount++;
