@@ -5,12 +5,22 @@ if (!admin.apps.length) {
   try {
     // 1. Try Vercel Environment Variables first
     if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
-      // Robustly handle Vercel private key format (quotes, escaped newlines, literal newlines)
-      let privateKey = process.env.FIREBASE_PRIVATE_KEY;
-      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-        privateKey = privateKey.slice(1, -1);
-      }
-      privateKey = privateKey.replace(/\\n/g, '\n');
+      // Absolute Bulletproof PEM Reconstruction
+      let rawKey = process.env.FIREBASE_PRIVATE_KEY || '';
+      
+      // Strip everything except the base64 payload
+      rawKey = rawKey.replace(/"/g, '');
+      rawKey = rawKey.replace(/-----BEGIN PRIVATE KEY-----/g, '');
+      rawKey = rawKey.replace(/-----END PRIVATE KEY-----/g, '');
+      rawKey = rawKey.replace(/\\n/g, '');
+      rawKey = rawKey.replace(/\n/g, '');
+      rawKey = rawKey.replace(/\s+/g, '');
+      
+      // Reconstruct the PEM perfectly (64 chars per line)
+      const matched = rawKey.match(/.{1,64}/g);
+      const privateKey = matched 
+        ? `-----BEGIN PRIVATE KEY-----\n${matched.join('\n')}\n-----END PRIVATE KEY-----\n`
+        : process.env.FIREBASE_PRIVATE_KEY; // Fallback if regex fails
       
       admin.initializeApp({
         credential: admin.credential.cert({
