@@ -32,8 +32,8 @@ export default function HealthPage() {
 
         <div className="glass-panel rounded-2xl p-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-500/10 rounded-xl">
-              <Server className="w-6 h-6 text-blue-400" />
+            <div className="p-3 bg-teal-500/10 rounded-xl">
+              <Server className="w-6 h-6 text-teal-400" />
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">Bridgecard API</h3>
@@ -41,8 +41,8 @@ export default function HealthPage() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xl font-bold text-blue-400">45ms</p>
-            <p className="text-xs text-blue-500">99.99% Uptime</p>
+            <p className="text-xl font-bold text-teal-400">45ms</p>
+            <p className="text-xs text-teal-500">99.99% Uptime</p>
           </div>
         </div>
       </div>
