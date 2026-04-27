@@ -4,6 +4,8 @@ import ComplianceClient from "./ComplianceClient";
 
 export const dynamic = "force-dynamic";
 
+const serializeData = (data: any) => JSON.parse(JSON.stringify(data));
+
 export default async function CompliancePage() {
   // We can't rely on where("kycStatus") because many users might not have the field written yet.
   // Instead, fetch all users and filter in memory, or fetch limited users.
@@ -16,7 +18,7 @@ export default async function CompliancePage() {
       const kyc = data.kycStatus || "pending";
       return { 
         id: doc.id, 
-        ...data,
+        ...serializeData(data),
         kycStatus: kyc,
         displayName: data.displayName || (data.firstName ? `${data.firstName} ${data.lastName || ''}` : "Unknown User")
       };
