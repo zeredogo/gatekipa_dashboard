@@ -19,10 +19,6 @@ export default function TransactionsClient({ initialTransactions, stats }: { ini
           <p className="text-gray-400 mt-1">Audit fund flows, wallet top-ups, card funding, and system deductions.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-xl transition-colors border border-white/10">
-            <Filter className="w-4 h-4" />
-            Filter
-          </button>
         </div>
       </div>
 
