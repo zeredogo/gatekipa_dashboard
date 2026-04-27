@@ -63,14 +63,14 @@ export default function DashboardLayoutClient({
         <div className="p-6 flex items-center justify-between shrink-0">
           {sidebarOpen ? (
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-forest-500 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-lg tracking-wide text-white">Gatekipa</span>
             </Link>
           ) : (
             <Link href="/" className="w-full flex justify-center">
-              <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-forest-500 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-white" />
               </div>
             </Link>
@@ -83,7 +83,7 @@ export default function DashboardLayoutClient({
             
             // Special styling for Global Freeze
             const isFreeze = item.name === "Global Freeze";
-            const activeColor = isFreeze ? "text-rose-400 bg-rose-500/10 border-rose-500/20" : "bg-teal-500/10 text-teal-400 border-teal-500/20";
+            const activeColor = isFreeze ? "text-rose-400 bg-rose-500/10 border-rose-500/20" : "bg-forest-500/10 text-forest-400 border-forest-500/20";
             const hoverColor = isFreeze ? "hover:bg-rose-500/5 group-hover:text-rose-400" : "hover:bg-white/5 group-hover:text-white";
 
             return (
@@ -94,7 +94,7 @@ export default function DashboardLayoutClient({
                   ${isActive ? activeColor : `text-gray-400 ${hoverColor}`}
                 `}
               >
-                <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? (isFreeze ? 'text-rose-400' : 'text-teal-400') : `text-gray-400 ${isFreeze ? 'group-hover:text-rose-400' : 'group-hover:text-white'} transition-colors`}`} />
+                <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? (isFreeze ? 'text-rose-400' : 'text-forest-400') : `text-gray-400 ${isFreeze ? 'group-hover:text-rose-400' : 'group-hover:text-white'} transition-colors`}`} />
                 {sidebarOpen && <span className="font-medium whitespace-nowrap text-sm">{item.name}</span>}
               </Link>
             );
@@ -121,11 +121,11 @@ export default function DashboardLayoutClient({
               <Menu className="w-5 h-5" />
             </button>
             <div className="relative group hidden md:block">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-400 transition-colors" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-forest-400 transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search across platform..." 
-                className="w-96 bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 focus:bg-white/10 transition-all"
+                className="w-96 bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-forest-500/50 focus:bg-white/10 transition-all"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function DashboardLayoutClient({
                 <p className="text-sm font-semibold text-white">{adminEmail}</p>
                 <p className="text-xs text-gray-400">Super Administrator</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-purple-500 border-2 border-white/10 flex items-center justify-center font-bold text-white uppercase">{adminEmail.charAt(0)}</div>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-forest-500 to-purple-500 border-2 border-white/10 flex items-center justify-center font-bold text-white uppercase">{adminEmail.charAt(0)}</div>
             </div>
           </div>
         </header>
@@ -149,7 +149,7 @@ export default function DashboardLayoutClient({
         {/* Dynamic Page Content */}
         <div className="flex-1 overflow-auto relative z-0">
           {/* Ambient Background Glows */}
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-forest-500/10 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
           <div className="p-8 relative z-10 max-w-7xl mx-auto min-h-full">

@@ -35,9 +35,9 @@ export default function TransactionsClient({ initialTransactions, stats }: { ini
           <p className="text-gray-400 text-sm font-medium mb-1">Total Card Funding (Recent)</p>
           <h3 className="text-3xl font-bold text-rose-400 tracking-tight">₦{stats.cardFunding.toLocaleString()}</h3>
         </div>
-        <div className="glass-panel rounded-2xl p-6 border border-teal-500/30 bg-teal-500/5">
-          <p className="text-teal-400 text-sm font-medium mb-1">Revenue Fees (Recent)</p>
-          <h3 className="text-3xl font-bold text-teal-400 tracking-tight">₦{stats.revenueFees.toLocaleString()}</h3>
+        <div className="glass-panel rounded-2xl p-6 border border-forest-500/30 bg-forest-500/5">
+          <p className="text-forest-400 text-sm font-medium mb-1">Revenue Fees (Recent)</p>
+          <h3 className="text-3xl font-bold text-forest-400 tracking-tight">₦{stats.revenueFees.toLocaleString()}</h3>
         </div>
       </div>
 
@@ -50,7 +50,7 @@ export default function TransactionsClient({ initialTransactions, stats }: { ini
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search reference or user ID..." 
-              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 focus:bg-white/10 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-forest-500/50 focus:bg-white/10 transition-all"
             />
           </div>
         </div>

@@ -3,7 +3,16 @@
 @theme {
   --color-background: #0f1115;
   --color-foreground: #ffffff;
-  --color-primary: #3b82f6;
+  --color-primary: #003629;
+  
+  /* Gatekipa Forest Green Palette */
+  --color-forest-300: #8abda9;
+  --color-forest-400: #61c680;
+  --color-forest-500: #1b4d3e;
+  --color-forest-600: #003629;
+  --color-forest-700: #00210c;
+  --color-forest-800: #001206;
+  
   --color-surface: rgba(255, 255, 255, 0.05);
   --color-surface-hover: rgba(255, 255, 255, 0.1);
 }

@@ -53,7 +53,7 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by Card Name or Last 4 digits..." 
-              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 focus:bg-white/10 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-forest-500/50 focus:bg-white/10 transition-all"
             />
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
                   <tr key={card.id} className="hover:bg-white/5 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-12 h-8 rounded flex items-center justify-center border border-white/10 ${card.status === 'active' ? 'bg-gradient-to-tr from-teal-600 to-teal-400' : 'bg-gradient-to-tr from-gray-600 to-gray-400 opacity-70'}`}>
+                        <div className={`w-12 h-8 rounded flex items-center justify-center border border-white/10 ${card.status === 'active' ? 'bg-gradient-to-tr from-forest-600 to-forest-400' : 'bg-gradient-to-tr from-gray-600 to-gray-400 opacity-70'}`}>
                           <span className="text-[10px] font-bold text-white tracking-widest">****</span>
                         </div>
                         <div>
@@ -98,7 +98,7 @@ export default function CardsClient({ initialCards }: { initialCards: any[] }) {
                           Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-full text-xs font-medium">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-forest-500/10 text-forest-400 border border-forest-500/20 rounded-full text-xs font-medium">
                           <Snowflake className="w-3 h-3" />
                           Frozen
                         </span>

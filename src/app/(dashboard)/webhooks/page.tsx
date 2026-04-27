@@ -43,7 +43,7 @@ export default function WebhooksPage() {
                     <code className="text-sm text-gray-300">card.transaction.successful</code>
                   </div>
                 </td>
-                <td className="p-4"><span className="text-sm font-medium text-teal-400">Bridgecard</span></td>
+                <td className="p-4"><span className="text-sm font-medium text-forest-400">Bridgecard</span></td>
                 <td className="p-4"><span className="text-sm text-gray-400">2 mins ago</span></td>
                 <td className="p-4"><span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-medium">Processed</span></td>
               </tr>

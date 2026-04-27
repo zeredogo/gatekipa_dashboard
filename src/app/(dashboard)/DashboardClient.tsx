@@ -20,7 +20,7 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ totalUsers, activeCards, isHealthy, totalTransactions }: DashboardClientProps) {
   const stats = [
-    { label: "Total Users", value: totalUsers.toLocaleString(), change: "Live", icon: Users, color: "text-teal-400" },
+    { label: "Total Users", value: totalUsers.toLocaleString(), change: "Live", icon: Users, color: "text-forest-400" },
     { label: "Active/Frozen Cards", value: activeCards.toLocaleString(), change: "Live", icon: CreditCard, color: "text-green-400" },
     { label: "System Status", value: isHealthy ? "Healthy" : "Lockdown", change: isHealthy ? "99.9%" : "Degraded", icon: isHealthy ? Activity : ServerCrash, color: isHealthy ? "text-emerald-400" : "text-rose-400" },
     { label: "Total Transactions", value: totalTransactions.toLocaleString(), change: "Live", icon: ShieldCheck, color: "text-amber-400" },
@@ -74,7 +74,7 @@ export default function DashboardClient({ totalUsers, activeCards, isHealthy, to
         <div className="lg:col-span-2 glass-panel rounded-2xl p-6 min-h-[400px]">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-xl font-bold text-white">Platform Activity</h2>
-            <select className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-teal-500/50">
+            <select className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-forest-500/50">
               <option>Last 7 Days</option>
               <option>Last 30 Days</option>
               <option>This Year</option>
@@ -89,7 +89,7 @@ export default function DashboardClient({ totalUsers, activeCards, isHealthy, to
         <div className="glass-panel rounded-2xl p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">Priority Alerts</h2>
-            <button className="text-sm text-teal-400 hover:text-teal-300">View All</button>
+            <button className="text-sm text-forest-400 hover:text-forest-300">View All</button>
           </div>
           <div className="flex-1 space-y-4">
             {recentAlerts.map((alert) => (
@@ -97,7 +97,7 @@ export default function DashboardClient({ totalUsers, activeCards, isHealthy, to
                 <div className="flex gap-4">
                   <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full ${
                     alert.type === 'fraud' ? 'bg-rose-500' : 
-                    alert.type === 'system' ? 'bg-amber-500' : 'bg-teal-500'
+                    alert.type === 'system' ? 'bg-amber-500' : 'bg-forest-500'
                   }`}></div>
                   <div>
                     <p className="text-sm text-gray-200 group-hover:text-white transition-colors">{alert.message}</p>

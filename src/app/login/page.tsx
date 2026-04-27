@@ -39,13 +39,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       {/* Ambient background */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-forest-500/10 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="w-full max-w-md relative z-10">
         <div className="glass-panel p-8 rounded-3xl border border-white/10 shadow-2xl">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/20">
+            <div className="w-16 h-16 rounded-2xl bg-forest-500 flex items-center justify-center mb-4 shadow-lg shadow-forest-500/20">
               <ShieldCheck className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white">Gatekipa Admin</h1>
@@ -69,7 +69,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@gatekipa.com" 
-                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-forest-500/50 transition-colors"
                 />
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••" 
-                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-forest-500/50 transition-colors"
                 />
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function LoginPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-teal-500/20 mt-6 disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 bg-forest-500 hover:bg-forest-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-forest-500/20 mt-6 disabled:opacity-50"
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Secure Login"}
             </button>
