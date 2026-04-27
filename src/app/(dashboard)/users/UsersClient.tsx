@@ -14,9 +14,6 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
   const [notificationBody, setNotificationBody] = useState("");
   const [isSendingNotification, setIsSendingNotification] = useState(false);
 
-  const [notificationTitle, setNotificationTitle] = useState("");
-  const [notificationBody, setNotificationBody] = useState("");
-  const [isSendingNotification, setIsSendingNotification] = useState(false);
 
   const handleSendNotification = async () => {
     if (!notificationTitle || !notificationBody) return alert("Title and Message are required");
