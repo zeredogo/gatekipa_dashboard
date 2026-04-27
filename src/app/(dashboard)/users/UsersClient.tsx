@@ -1,14 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
-import { Users, Search, Filter } from "lucide-react";
+import React, { useState, useTransition } from "react";
+import { Users, Search, Filter, Ban, CheckCircle, Loader2 } from "lucide-react";
+import { toggleUserBlockStatus } from "@/app/actions/adminActions";
 
 export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState(initialUsers);
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  const filteredUsers = initialUsers.filter(u => 
-    u.displayName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const handleToggleBlock = (userId: string, currentStatus: string) => {
+    setPendingUserId(userId);
+    startTransition(async () => {
+      const result = await toggleUserBlockStatus(userId, currentStatus);
+      if (result.success) {
+        setUsers(users.map(u => u.id === userId ? { ...u, status: result.status } : u));
+      } else {
+        alert("Failed to update user block status");
+      }
+      setPendingUserId(null);
+    });
+  };
+
+  const filteredUsers = users.filter(u => 
+    (u.displayName || "").toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (u.email || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -87,8 +104,19 @@ export default function UsersClient({ initialUsers }: { initialUsers: any[] }) {
                     <td className="p-4">
                       <span className="text-sm text-gray-400">{user.createdAt}</span>
                     </td>
-                    <td className="p-4">
-                      <button className="text-forest-400 hover:text-forest-300 text-sm font-medium">View Details</button>
+                    <td className="p-4 flex gap-2">
+                      <button className="text-forest-400 hover:text-forest-300 text-sm font-medium">Details</button>
+                      <button 
+                        onClick={() => handleToggleBlock(user.id, user.status || "active")}
+                        disabled={pendingUserId === user.id}
+                        className={`text-sm font-medium flex items-center gap-1 disabled:opacity-50 ${user.status === 'blocked' ? 'text-emerald-400 hover:text-emerald-300' : 'text-rose-400 hover:text-rose-300'}`}
+                      >
+                        {pendingUserId === user.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          user.status === 'blocked' ? <><CheckCircle className="w-4 h-4" /> Unblock</> : <><Ban className="w-4 h-4" /> Block</>
+                        )}
+                      </button>
                     </td>
                   </tr>
                 ))

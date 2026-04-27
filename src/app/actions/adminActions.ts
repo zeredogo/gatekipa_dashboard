@@ -43,3 +43,35 @@ export async function toggleCardFreeze(cardId: string, currentStatus: string) {
     return { success: false, error: "Failed to update card status." };
   }
 }
+
+// --- USER ACTIONS --- //
+
+export async function toggleUserBlockStatus(userId: string, currentStatus: string) {
+  try {
+    const block = currentStatus !== "blocked";
+    await db.collection("users").doc(userId).update({
+      status: block ? "blocked" : "active"
+    });
+    revalidatePath("/users");
+    revalidatePath("/fraud");
+    return { success: true, status: block ? "blocked" : "active" };
+  } catch (e: any) {
+    console.error("Failed to block user:", e);
+    return { success: false, error: e.message };
+  }
+}
+
+// --- RULES ACTIONS --- //
+
+export async function updateFeeConfiguration(fee: number) {
+  try {
+    await db.collection("system_state").doc("fees").set({
+      cardCreationFee: fee
+    }, { merge: true });
+    revalidatePath("/rules");
+    return { success: true };
+  } catch (e: any) {
+    console.error("Failed to update fee:", e);
+    return { success: false, error: e.message };
+  }
+}
