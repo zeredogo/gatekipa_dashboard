@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Gatekeeper Control Center",
-  description: "Administrative Master Dashboard",
+  title: "Gatekipa Admin Central",
+  description: "Enterprise administration portal for Gatekipa",
 };
 
 export default function RootLayout({
@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-neutral-50 text-neutral-900`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} antialiased bg-background text-foreground selection:bg-primary/30`}>
         {children}
       </body>
     </html>
