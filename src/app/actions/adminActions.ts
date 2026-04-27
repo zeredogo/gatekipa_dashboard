@@ -94,6 +94,14 @@ export async function approveKyc(userId: string) {
 // --- NOTIFICATION ACTIONS --- //
 export async function sendInAppNotification(userId: string, title: string, message: string) {
   try {
+    const sessionCookie = cookies().get('session')?.value;
+    if (!sessionCookie) return { success: false, error: "Unauthorized" };
+
+    const admin = require("firebase-admin");
+    const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true);
+    if (!decodedClaims.admin && !decodedClaims.super_admin) return { success: false, error: "Unauthorized" };
+    
+    const db = admin.firestore();
     const userDoc = await db.collection("users").doc(userId).get();
     if (!userDoc.exists) return { success: false, error: "User not found" };
 
@@ -110,7 +118,6 @@ export async function sendInAppNotification(userId: string, title: string, messa
     // 2. Dispatch FCM Push Notification if token exists
     const fcmToken = userDoc.data()?.fcm_token;
     if (fcmToken) {
-      const admin = require("firebase-admin");
       await admin.messaging().send({
         token: fcmToken,
         notification: {
