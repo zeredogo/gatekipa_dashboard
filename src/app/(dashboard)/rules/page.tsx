@@ -1,28 +1,58 @@
-"use client";
-
 import React from "react";
-import { Cpu, Plus } from "lucide-react";
+import { Sliders, Settings } from "lucide-react";
+import { db } from "@/lib/firebaseAdmin";
 
-export default function RulesPage() {
+export const dynamic = "force-dynamic";
+
+export default async function RulesPage() {
+  // Query system configurations
+  const globalStateDoc = await db.collection("system_state").doc("global").get();
+  const systemState = globalStateDoc.exists ? globalStateDoc.data() : { mode: "NORMAL" };
+
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Global Rules</h1>
-          <p className="text-gray-400 mt-1">Adjust platform-wide spending caps and security rules.</p>
-        </div>
-        <button className="flex items-center gap-2 bg-forest-500 hover:bg-forest-600 text-white px-4 py-2 rounded-xl transition-colors font-medium">
-          <Plus className="w-4 h-4" />
-          Add Global Rule
-        </button>
+      <div>
+        <h1 className="text-3xl font-bold text-white tracking-tight">System Rules & Limits</h1>
+        <p className="text-gray-400 mt-1">Configure global transaction limits, fee tiers, and platform logic.</p>
       </div>
 
-      <div className="glass-panel rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[300px]">
-        <div className="w-16 h-16 rounded-full bg-forest-500/10 flex items-center justify-center mb-4">
-          <Cpu className="w-8 h-8 text-forest-400" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="glass-panel p-6 rounded-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-forest-500/10 flex items-center justify-center">
+              <Sliders className="w-5 h-5 text-forest-400" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Global State</h2>
+          </div>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/10">
+              <div>
+                <p className="text-white font-medium">Platform Mode</p>
+                <p className="text-xs text-gray-400">Current operational state.</p>
+              </div>
+              <span className={`px-2 py-1 ${systemState?.mode === 'LOCKDOWN' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'} border rounded-full text-xs font-medium uppercase`}>
+                {systemState?.mode || "NORMAL"}
+              </span>
+            </div>
+          </div>
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">No Active Overrides</h3>
-        <p className="text-gray-400 max-w-md">The system is operating on default configuration. Create a global rule to temporarily lower limits or block specific merchant categories across all users.</p>
+
+        <div className="glass-panel p-6 rounded-2xl opacity-50 cursor-not-allowed">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center">
+              <Settings className="w-5 h-5 text-indigo-400" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Fee Configuration (Coming Soon)</h2>
+          </div>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/10">
+              <div>
+                <p className="text-white font-medium">Card Creation Fee</p>
+              </div>
+              <p className="text-white font-bold">$2.00</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
