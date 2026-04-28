@@ -13,6 +13,7 @@ export default async function TransactionsPage() {
   allTxSnapshot.forEach(doc => {
     const data = doc.data();
     const amount = data.amount || 0;
+    if (data.status !== 'SUCCESS') return;
     if (data.type === "wallet_funding" || data.type === "funding") vaultDeposits += amount;
     if (data.type === "wallet_to_card" || data.type === "card_funding") cardFunding += amount;
     if (data.fee) revenueFees += data.fee;
