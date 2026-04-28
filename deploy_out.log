@@ -1,0 +1,82 @@
+Retrieving project…
+Deploying kusuconsult/gatekipa-dashboard
+Uploading [--------------------] (0.0B/63B)
+Uploading [====================] (63.0B/63B)
+Inspect: https://vercel.com/kusuconsult/gatekipa-dashboard/ETgeDfzrQQozazQiZobkYLJoinMa [3s]
+Production: https://gatekipa-dashboard-g894le6oe-kusuconsult.vercel.app [3s]
+Building...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 52 deployment files...
+Building: Restored build cache from previous deployment (FXtn7uqJUCmPHrEFtoSLSCHjGtzB)
+Building: Running "vercel build"
+Building: Vercel CLI 51.6.1
+Building: Installing dependencies...
+Building: up to date in 2s
+Building: 164 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 16.2.4
+Building: Running "npm run build"
+Building: > admin-portal@0.1.0 build
+Building: > next build
+Building: Applying modifyConfig from Vercel
+Building: ▲ Next.js 16.2.4 (Turbopack)
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 16.1s
+Building: Running TypeScript ...
+Building: Finished TypeScript in 6.6s ...
+Building: Collecting page data using 1 worker ...
+Building: Generating static pages using 1 worker (0/8) ...
+Building: Generating static pages using 1 worker (2/8)
+Building: Generating static pages using 1 worker (4/8)
+Building: Generating static pages using 1 worker (6/8)
+Building: ✓ Generating static pages using 1 worker (8/8) in 323ms
+Building: Finalizing page optimization ...
+Building: Running onBuildComplete from Vercel
+Building: Detected .env file, it is strongly recommended to use Vercel's env handling instead
+Building: Route (app)
+Building: ┌ ƒ /
+Building: ├ ○ /_not-found
+Building: ├ ƒ /cards
+Building: ├ ƒ /compliance
+Building: ├ ƒ /fraud
+Building: ├ ƒ /freeze
+Building: ├ ƒ /health
+Building: ├ ○ /login
+Building: ├ ƒ /reconciliation
+Building: ├ ƒ /rules
+Building: ├ ƒ /transactions
+Building: ├ ƒ /users
+Building: └ ƒ /webhooks
+Building: ƒ Proxy (Middleware)
+Building: ○  (Static)   prerendered as static content
+Building: ƒ  (Dynamic)  server-rendered on demand
+Building: Build Completed in /vercel/output [29s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: https://gatekipa-dashboard-g894le6oe-kusuconsult.vercel.app [47s]
+Completing...
+Aliased: https://gatekipa-dashboard-eight.vercel.app [47s]
+{
+  "status": "ok",
+  "deployment": {
+    "id": "dpl_ETgeDfzrQQozazQiZobkYLJoinMa",
+    "url": "https://gatekipa-dashboard-g894le6oe-kusuconsult.vercel.app",
+    "inspectorUrl": "https://vercel.com/kusuconsult/gatekipa-dashboard/ETgeDfzrQQozazQiZobkYLJoinMa",
+    "readyState": "READY",
+    "target": "production",
+    "deploymentApiUrl": "https://api.vercel.com/v13/deployments/dpl_ETgeDfzrQQozazQiZobkYLJoinMa"
+  },
+  "message": "Deployment gatekipa-dashboard-g894le6oe-kusuconsult.vercel.app ready.",
+  "next": [
+    {
+      "command": "vercel inspect gatekipa-dashboard-g894le6oe-kusuconsult.vercel.app --token=vca_7c4VNTiX11UXHrALpvVCkogn5N6iN4yocTlYydUpQKNb6mC8gL0Sdz7d",
+      "when": "Inspect deployment"
+    },
+    {
+      "command": "vercel deploy --prod --token=vca_7c4VNTiX11UXHrALpvVCkogn5N6iN4yocTlYydUpQKNb6mC8gL0Sdz7d",
+      "when": "Promote to production"
+    }
+  ]
+}
