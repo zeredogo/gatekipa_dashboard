@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Search, RotateCw, CheckCircle, AlertTriangle } from "lucide-react";
 import { runReconciliationSweep } from "@/app/actions/adminActions";
-import { toast } from "react-hot-toast";
 
 export default function ReconciliationClient({ 
   gatekipaLedger, 
@@ -18,16 +17,15 @@ export default function ReconciliationClient({
 
   const handleSweep = async () => {
     setIsSweeping(true);
-    const toastId = toast.loading("Running deep ledger reconciliation...");
     try {
       const res = await runReconciliationSweep();
       if (res.success) {
-        toast.success(res.message || "Ledger synced", { id: toastId });
+        alert(res.message || "Ledger synced");
       } else {
-        toast.error("Failed to run sweep: " + res.error, { id: toastId });
+        alert("Failed to run sweep: " + res.error);
       }
     } catch (e: any) {
-      toast.error("Error running sweep", { id: toastId });
+      alert("Error running sweep");
     } finally {
       setIsSweeping(false);
     }
