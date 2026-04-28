@@ -19,6 +19,16 @@ export default async function TransactionsPage() {
     if (data.fee) revenueFees += data.fee;
   });
 
+  // Fetch plan purchases to accurately reflect total platform inflow
+  const planPurchasesSnapshot = await db.collectionGroup("plan_purchases").get();
+  planPurchasesSnapshot.forEach(doc => {
+    const data = doc.data();
+    if (data.status === "success" && data.amountKobo) {
+      vaultDeposits += (data.amountKobo / 100);
+      revenueFees += (data.amountKobo / 100); // Plan purchases are direct revenue
+    }
+  });
+
   const transactionsSnapshot = await db.collection("transactions").orderBy("created_at", "desc").limit(25).get();
 
   const transactions = transactionsSnapshot.docs.map(doc => {

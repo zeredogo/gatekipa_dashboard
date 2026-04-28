@@ -11,7 +11,7 @@ export default async function CardsPage() {
     return {
       id: doc.id,
       name: data.name || data.cardName || "Virtual Card",
-      last4: data.last4 || "****",
+      last4: data.last4 ? data.last4 : "PEND",
       ownerId: data.created_by || data.userId || "Unknown",
       status: data.local_status || data.status || "frozen",
       balance: data.allocated_amount || data.balance || 0,

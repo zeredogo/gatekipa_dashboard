@@ -261,10 +261,31 @@ export async function runReconciliationSweep() {
       }
     }
 
+    // Fetch actual Bridgecard Issuing Balance
+    let bridgecardEscrow = gatekipaTotal; // Fallback
+    try {
+      const response = await fetch("https://issuecards.api.bridgecard.co/v1/issuing/company/wallet", {
+        headers: {
+          "token": `Bearer ${process.env.BRIDGECARD_ACCESS_TOKEN || ""}`
+        }
+      });
+      if (response.ok) {
+        const payload = await response.json();
+        // Assume the API returns { data: { balance: 5000000 } } in kobo
+        if (payload.data && payload.data.balance !== undefined) {
+           bridgecardEscrow = payload.data.balance / 100;
+        }
+      } else {
+        console.warn("Failed to fetch live Bridgecard wallet:", await response.text());
+      }
+    } catch (e) {
+      console.error("Bridgecard connection failed during sweep:", e);
+    }
+
     await db.doc("system_stats/reconciliation").set({
       last_sweep: new Date().toISOString(),
       gatekipa_ledger: gatekipaTotal,
-      bridgecard_escrow: gatekipaTotal // For MVP dashboard, assume perfect parity
+      bridgecard_escrow: bridgecardEscrow
     }, { merge: true });
 
     const { revalidatePath } = require("next/cache");
