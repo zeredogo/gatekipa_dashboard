@@ -30,10 +30,39 @@ export async function toggleCardFreeze(cardId: string, currentStatus: string) {
   try {
     const newStatus = currentStatus === "active" ? "frozen" : "active";
     
-    // In a real scenario, this should also hit the Bridgecard API to actually freeze the card.
-    // We will update the Firestore state which the mobile app listens to.
+    // Call Bridgecard API directly
+    const cardDoc = await db.collection("cards").doc(cardId).get();
+    if (!cardDoc.exists) throw new Error("Card not found");
+    const bridgecardCardId = cardDoc.data()?.bridgecard_card_id;
+    const currency = cardDoc.data()?.bridgecard_currency || "NGN";
+    
+    if (bridgecardCardId) {
+      // Inline the API call to avoid cross-project import issues
+      const isUsd = (currency || "NGN").toUpperCase() === "USD";
+      const endpoint = newStatus === "frozen" 
+        ? (isUsd ? "/cards/freeze_card" : "/naira_cards/freeze_card")
+        : (isUsd ? "/cards/unfreeze_card" : "/naira_cards/unfreeze_card");
+        
+      const response = await fetch(`https://issuecards.api.bridgecard.co/v1/issuing${endpoint}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "token": `Bearer ${process.env.BRIDGECARD_ACCESS_TOKEN || ""}`,
+          "issuing-app-id": process.env.BRIDGECARD_ISSUING_APP_ID || "8ea9a4b4-26b1-4aa6-8e29-25648057ab7d"
+        },
+        body: JSON.stringify({ card_id: bridgecardCardId })
+      });
+      
+      if (!response.ok) {
+         console.warn("Bridgecard API freeze failed:", await response.text());
+         // Allow it to fall through to update local state anyway
+      }
+    }
+
     await db.collection("cards").doc(cardId).update({
       local_status: newStatus,
+      status: newStatus,
+      bridgecard_status: newStatus,
       updatedAt: new Date().toISOString()
     });
 
