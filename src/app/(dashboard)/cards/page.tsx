@@ -4,7 +4,7 @@ import CardsClient from "./CardsClient";
 export const dynamic = "force-dynamic";
 
 export default async function CardsPage() {
-  const cardsSnapshot = await db.collection("cards").orderBy("created_at", "desc").limit(25).get();
+  const cardsSnapshot = await db.collection("cards").orderBy("created_at", "desc").limit(100).get();
   
   const cards = cardsSnapshot.docs.map(doc => {
     const data = doc.data();
